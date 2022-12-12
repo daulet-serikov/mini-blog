@@ -1,9 +1,9 @@
 import {rest} from 'msw'
-import {config} from '../config'
+import {configuration} from '../configuration'
 
-export const login = rest.post(`${config.apiPrefix}/login`, (req, res, ctx) => {
+export const login = rest.post(`${configuration.apiPrefix}/login`, (req, res, ctx) => {
   return res(
-    ctx.delay(config.delay),
+    ctx.delay(configuration.delay),
     ctx.status(200)
   )
 })

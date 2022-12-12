@@ -1,11 +1,12 @@
 import {rest} from 'msw'
-import {config} from '../config'
-import {getPosts} from '../db'
+import {configuration} from '../configuration'
+import {getPosts} from '../database'
 
-export const posts = rest.get(`${config.apiPrefix}/posts`, async (req, res, ctx) => {
+export const posts = rest.get(`${configuration.apiPrefix}/posts`, async (request, response, context) => {
   const posts = await getPosts()
-  return res(
-    ctx.delay(config.delay),
-    ctx.json(posts)
+
+  return response(
+    context.delay(configuration.delay),
+    context.json(posts)
   )
 })

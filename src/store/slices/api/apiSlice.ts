@@ -1,9 +1,9 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import {config} from '../../../server/config'
+import {configuration} from '../../../server/configuration'
 import {Post} from '../../../types/Post'
 
 export const apiSlice = createApi({
-  baseQuery: fetchBaseQuery({baseUrl: config.apiPrefix}),
+  baseQuery: fetchBaseQuery({baseUrl: configuration.apiPrefix}),
   endpoints: builder => ({
     getPosts: builder.query<Post[], void>({
       query: () => '/posts'
