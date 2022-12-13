@@ -1,4 +1,6 @@
 export interface Post {
+  title: string
   content: string
-  authorId: number
+  authorId: number,
+  publicationDate: string
 }

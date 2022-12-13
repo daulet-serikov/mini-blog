@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import {routes} from './routes'
-import {ConfigProvider, theme} from 'antd'
 
 if (process.env.NODE_ENV === 'development') {
   const {worker} = require('./server/server')
@@ -21,9 +20,7 @@ const root = createRoot(container)
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ConfigProvider /* TODO{implement dart theme}theme={{algorithm: theme.darkAlgorithm}}*/>
-        <RouterProvider router={router} />
-      </ConfigProvider>
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 )

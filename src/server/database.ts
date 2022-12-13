@@ -66,6 +66,17 @@ export async function getPosts() {
   })
 }
 
+export async function getUsers() {
+  const users = await getObjectStore('users', 'readonly')
+  const request = users.getAll()
+
+  return new Promise<User[]>(resolve => {
+    request.onsuccess = () => {
+      resolve(request.result)
+    }
+  })
+}
+
 export async function addPost(post: Post) {
   const posts = await getObjectStore('posts', 'readwrite')
   posts.add(post)
