@@ -1,5 +1,5 @@
-import {User} from '../types/User'
-import {Post} from '../types/Post'
+import {User} from './types/User'
+import {Post} from './types/Post'
 import {users as mockUsers, posts as mockPosts} from './mock-data'
 
 let database: IDBDatabase

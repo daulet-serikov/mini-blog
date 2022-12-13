@@ -1,12 +1,11 @@
 import {useGetPostsQuery} from '../../store/slices/api/apiSlice'
 
 export const Posts = () => {
-  let {data: posts} = useGetPostsQuery()
-
+  let {data: posts} = useGetPostsQuery() // TODO getSelectors
 
   return (
     <>
-      {posts?.map(post => <p>{post.content}</p>)}
+      {posts?.ids.map(post => <p>{post}</p>)}
     </>
   )
 }
