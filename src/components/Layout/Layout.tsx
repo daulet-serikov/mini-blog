@@ -1,20 +1,21 @@
 import {Layout as AntLayout} from 'antd'
 import {Outlet} from 'react-router-dom'
-import {Col, Row} from 'antd'
-const {Header, Footer, Content} = AntLayout
+import styles from './Layout.module.css'
+import {Header} from '../Header/Header'
+const {Header: AntHeader, Footer, Content} = AntLayout
 
 export function Layout() {
   return (
     <AntLayout>
-      <Header>Header</Header>
-      <Content>
-        <Row justify='center'>
-          <Col span={20}>
-            <Outlet />
-          </Col>
-        </Row>
+      <AntHeader>
+        <Header />
+      </AntHeader>
+      <Content className={styles.content}>
+        <Outlet />
       </Content>
-      <Footer>Footer</Footer>
+      <Footer className={styles.footer}>
+        The purpose of this application is to demonstrate <a href='https://www.linkedin.com/in/daulet-serikov/'>Daulet Serikov</a>'s skills. The source code and details can be found <a href='https://github.com/dauletserikov/mini-blog'>here</a>.
+      </Footer>
     </AntLayout>
   )
 }

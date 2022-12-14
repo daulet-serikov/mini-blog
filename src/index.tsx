@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals'
 import './index.css'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import {routes} from './routes'
+import {apiSlice} from './store/slices/api/apiSlice'
+import {LoginModal} from './components/LoginModal/LoginModal'
+import {RegisterModal} from './components/RegisterModal/RegisterModal'
+import {NewPostModal} from './components/NewPostModal/NewPostModal'
 
 if (process.env.NODE_ENV === 'development') {
   const {worker} = require('./server/server')
@@ -17,10 +21,16 @@ const router = createBrowserRouter(routes)
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
+store.dispatch(apiSlice.endpoints.getPosts.initiate())
+store.dispatch(apiSlice.endpoints.getUsers.initiate())
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
+      <LoginModal />
+      <RegisterModal />
+      <NewPostModal />
     </Provider>
   </React.StrictMode>
 )

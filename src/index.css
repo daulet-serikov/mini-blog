@@ -7,10 +7,3 @@ body,
 body {
   margin: 0;
 }
-
-.centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}

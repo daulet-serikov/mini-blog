@@ -1,4 +1,4 @@
-import {Card} from 'antd'
+import {Card, Typography} from 'antd'
 import {selectPostById, selectUserById, useGetUsersQuery} from '../../store/slices/api/apiSlice'
 import {useAppSelector} from '../../store/hooks'
 import {EntityId} from '@reduxjs/toolkit'
@@ -12,7 +12,7 @@ export function Post({id}: {id: EntityId}) {
 
   return (
     <Card title={post?.title} extra={<>by <a href='#'>{user?.name}</a></>}>
-      <p>{post?.content}</p>
+      <Typography.Paragraph>{post?.content}</Typography.Paragraph>
     </Card>
   )
 }
