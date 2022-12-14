@@ -10,11 +10,9 @@ import {apiSlice} from './store/slices/api/apiSlice'
 import {LoginModal} from './components/LoginModal/LoginModal'
 import {RegisterModal} from './components/RegisterModal/RegisterModal'
 import {AddPostModal} from './components/AddPostModal/AddPostModal'
+import {worker} from './server/server'
 
-if (process.env.NODE_ENV === 'development') {
-  const {worker} = require('./server/server')
-  worker.start()
-}
+worker.start()
 
 const router = createBrowserRouter(routes)
 

@@ -20,9 +20,8 @@ async function initialize() {
 
     openRequest.onupgradeneeded = () => {
       const database = openRequest.result
-      database.createObjectStore('users', {keyPath: 'name'})
-      const posts = database.createObjectStore('posts', {keyPath: 'id', autoIncrement: true})
-      posts.createIndex('author', 'author')
+      database.createObjectStore('users', {keyPath: 'username'})
+      database.createObjectStore('posts', {keyPath: 'id', autoIncrement: true})
     }
 
     openRequest.onsuccess = () => {
@@ -80,7 +79,10 @@ export async function getUsers(passwords = false): Promise<ClientUser[] | User[]
       const users = request.result as User[]
 
       if (!passwords) {
-        const passwordlessUsers: ClientUser[] = users.map(user => ({name: user.name}))
+        const passwordlessUsers: ClientUser[] = users.map(user => {
+          const {password: _, ...passwordlessUser} = user
+          return passwordlessUser as ClientUser
+        })
         resolve(passwordlessUsers)
       }
 

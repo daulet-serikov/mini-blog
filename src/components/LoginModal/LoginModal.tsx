@@ -26,8 +26,8 @@ export function LoginModal() {
         form={form}
       >
         <Form.Item
-          name='name'
-          rules={[{required: true, message: 'Name cannot be empty'}]}
+          name='username'
+          rules={[{required: true, message: 'Username cannot be empty'}]}
         >
           <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Name' />
         </Form.Item>

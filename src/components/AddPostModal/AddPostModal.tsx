@@ -19,7 +19,7 @@ export function AddPostModal() {
       </Button>
     ]}>
       <Form
-        name='new-post'
+        name='addPost'
         onFinish={onSubmit}
         className={styles.form}
         form={form}

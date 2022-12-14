@@ -9,7 +9,7 @@ const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
 })
 const usersAdapter = createEntityAdapter<User>({
-  selectId: (user) => user.name
+  selectId: (user) => user.username
 })
 
 const postsInitialState = postsAdapter.getInitialState()
@@ -30,13 +30,6 @@ export const apiSlice = createApi({
         return usersAdapter.setAll(usersInitialState, response as User[])
       }
     })
-    /*getPost: builder.query<Post, number>({
-      async queryFn(id, _api, _extraOptions, baseQuery) {
-        const query = await baseQuery('/posts')
-        const posts = query.data as Post[]
-        return {data: posts[id]}
-      }
-    })*/
   })
 })
 
@@ -62,7 +55,7 @@ export const selectPostIdsByUser = createSelector(
   (posts, author) => {
     if (!author) return []
 
-    const postsFiltered = posts.filter(post => post.author === author.name)
+    const postsFiltered = posts.filter(post => post.author === author.username)
     return postsFiltered.map(post => post.id)
   }
 )

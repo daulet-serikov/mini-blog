@@ -6,7 +6,7 @@ import {
 } from '../../store/slices/api/apiSlice'
 import {useAppSelector} from '../../store/hooks'
 import {Post} from '../Post/Post'
-import {Space, Skeleton, Typography, Empty} from 'antd'
+import {Space, Skeleton, Typography, Empty, Descriptions, Card} from 'antd'
 import {useParams, Link} from 'react-router-dom'
 import styles from './Profile.module.css'
 
@@ -27,7 +27,7 @@ export const Profile = () => {
   )
 
   if (isPostsSuccess && !isPostsLoading && isUsersSuccess && !isUsersLoading) {
-    if (!user && !postIds) {
+    if (!user) {
       content = (
         <Empty className={styles.empty} description={
           <Typography.Paragraph>
@@ -37,12 +37,19 @@ export const Profile = () => {
       )
     } else {
       content = (
-        <>
-          <Typography.Title>{`${userId}'s posts`}</Typography.Title>
+        <Space direction='vertical'>
+          <Card title='User Info'>
+            <Descriptions>
+              <Descriptions.Item label='Username'>{user.username}</Descriptions.Item>
+              <Descriptions.Item label='First Name'>{user.firstName}</Descriptions.Item>
+              <Descriptions.Item label='Last Name'>{user.lastName}</Descriptions.Item>
+            </Descriptions>
+          </Card>
+          <Typography.Title>{`${user.firstName}'s posts`}</Typography.Title>
           <Space direction='vertical'>
-            {postIds.map(id => <Post key={id} id={id} />)}
+            {postIds.map(id => <Post key={id} id={id} showAuthor={false} />)}
           </Space>
-        </>
+        </Space>
       )
     }
   }
