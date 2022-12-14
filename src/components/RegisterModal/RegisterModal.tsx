@@ -1,16 +1,20 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {Button, Form, Input, Modal} from 'antd'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import styles from './RegisterModal.module.css'
+import {modalToggled} from '../../store/slices/modalsSlice'
 
 export function RegisterModal() {
   const [form] = Form.useForm()
+  const open = useAppSelector(state => state.modals.register)
+  const dispatch = useAppDispatch()
 
   const onSubmit = () => {
     console.log('submitted')
   }
 
   return (
-    <Modal open={false} title='Register' footer={[
+    <Modal open={open} onCancel={() => dispatch(modalToggled('register'))} title='Register' footer={[
       <Button key='submit' type='primary' onClick={form.submit}>
         Submit
       </Button>

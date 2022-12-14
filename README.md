@@ -1,4 +1,12 @@
-TODO: update readme
+# TODOs
+- update readme
+- dynamic titles
+- display publication date
+- remove css files
+- rename some files/directories
+- modal bug on close
+- user or author?
+- get rid of author index
 
 # Getting Started with Create React App
 

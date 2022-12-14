@@ -1,4 +1,4 @@
-import {createEntityAdapter, EntityState} from '@reduxjs/toolkit'
+import {createEntityAdapter, EntityState, createSelector} from '@reduxjs/toolkit'
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {configuration} from '../../../server/configuration'
 import {Post} from '../../../types/Post'
@@ -8,7 +8,9 @@ import {RootState} from '../../store'
 const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
 })
-const usersAdapter = createEntityAdapter<User>()
+const usersAdapter = createEntityAdapter<User>({
+  selectId: (user) => user.name
+})
 
 const postsInitialState = postsAdapter.getInitialState()
 const usersInitialState = usersAdapter.getInitialState()
@@ -42,7 +44,8 @@ export const {useGetPostsQuery, useGetUsersQuery} = apiSlice
 
 export const {
   selectById: selectPostById,
-  selectIds: selectPostIds
+  selectIds: selectPostIds,
+  selectAll: selectAllPosts
 } = postsAdapter.getSelectors<RootState>(state => {
   return apiSlice.endpoints.getPosts.select()(state).data ?? postsInitialState
 })
@@ -53,3 +56,13 @@ export const {
 } = usersAdapter.getSelectors<RootState>(state => {
   return apiSlice.endpoints.getUsers.select()(state).data ?? usersInitialState
 })
+
+export const selectPostIdsByUser = createSelector(
+  [selectAllPosts, selectUserById],
+  (posts, author) => {
+    if (!author) return []
+
+    const postsFiltered = posts.filter(post => post.author === author.name)
+    return postsFiltered.map(post => post.id)
+  }
+)

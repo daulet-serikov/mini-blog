@@ -1,16 +1,19 @@
 import {Button, Form, Input, Modal} from 'antd'
-import styles from './NewPostModal.module.css'
-const {TextArea} = Input
+import styles from './AddPostModal.module.css'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {modalToggled} from '../../store/slices/modalsSlice'
 
-export function NewPostModal() {
+export function AddPostModal() {
   const [form] = Form.useForm()
+  const open = useAppSelector(state => state.modals.addPost)
+  const dispatch = useAppDispatch()
 
   const onSubmit = () => {
     console.log('submitted')
   }
 
   return (
-    <Modal open={false} title='New post' footer={[
+    <Modal open={open} onCancel={() => dispatch(modalToggled('addPost'))} title='New post' footer={[
       <Button key='submit' type='primary' onClick={form.submit}>
         Submit
       </Button>
@@ -34,7 +37,7 @@ export function NewPostModal() {
           name='content'
           rules={[{required: true, message: 'Please provide some content'}]}
         >
-          <TextArea rows={4} />
+          <Input.TextArea rows={4} />
         </Form.Item>
       </Form>
     </Modal>

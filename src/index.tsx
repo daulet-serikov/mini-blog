@@ -9,7 +9,7 @@ import {routes} from './routes'
 import {apiSlice} from './store/slices/api/apiSlice'
 import {LoginModal} from './components/LoginModal/LoginModal'
 import {RegisterModal} from './components/RegisterModal/RegisterModal'
-import {NewPostModal} from './components/NewPostModal/NewPostModal'
+import {AddPostModal} from './components/AddPostModal/AddPostModal'
 
 if (process.env.NODE_ENV === 'development') {
   const {worker} = require('./server/server')
@@ -30,7 +30,7 @@ root.render(
       <RouterProvider router={router} />
       <LoginModal />
       <RegisterModal />
-      <NewPostModal />
+      <AddPostModal />
     </Provider>
   </React.StrictMode>
 )

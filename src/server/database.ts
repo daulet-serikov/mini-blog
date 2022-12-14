@@ -1,5 +1,6 @@
 import {User} from './types/User'
 import {Post} from './types/Post'
+import {User as ClientUser} from '../types/User'
 import {users as mockUsers, posts as mockPosts} from './mock-data'
 
 let database: IDBDatabase
@@ -19,8 +20,9 @@ async function initialize() {
 
     openRequest.onupgradeneeded = () => {
       const database = openRequest.result
-      database.createObjectStore('users', {keyPath: 'id', autoIncrement: true})
-      database.createObjectStore('posts', {keyPath: 'id', autoIncrement: true})
+      database.createObjectStore('users', {keyPath: 'name'})
+      const posts = database.createObjectStore('posts', {keyPath: 'id', autoIncrement: true})
+      posts.createIndex('author', 'author')
     }
 
     openRequest.onsuccess = () => {
@@ -66,13 +68,23 @@ export async function getPosts() {
   })
 }
 
-export async function getUsers() {
+export async function getUsers(passwords: false): Promise<ClientUser[]>
+export async function getUsers(passwords: true): Promise<User[]>
+export async function getUsers(): Promise<ClientUser[]>
+export async function getUsers(passwords = false): Promise<ClientUser[] | User[]> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.getAll()
 
-  return new Promise<User[]>(resolve => {
+  return new Promise(resolve => {
     request.onsuccess = () => {
-      resolve(request.result)
+      const users = request.result as User[]
+
+      if (!passwords) {
+        const passwordlessUsers: ClientUser[] = users.map(user => ({name: user.name}))
+        resolve(passwordlessUsers)
+      }
+
+      resolve(users)
     }
   })
 }

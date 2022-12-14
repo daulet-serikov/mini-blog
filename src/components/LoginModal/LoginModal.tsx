@@ -1,16 +1,20 @@
 import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {Button, Form, Input, Modal} from 'antd'
 import styles from './LoginModal.module.css'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {modalToggled} from '../../store/slices/modalsSlice'
 
 export function LoginModal() {
   const [form] = Form.useForm()
+  const open = useAppSelector(state => state.modals.login)
+  const dispatch = useAppDispatch()
 
   const onSubmit = () => {
     console.log('submitted')
   }
 
   return (
-    <Modal open={false} title='Log in' footer={[
+    <Modal open={open} onCancel={() => dispatch(modalToggled('login'))} title='Log in' footer={[
       <Button key='submit' type='primary' onClick={form.submit}>
         Submit
       </Button>

@@ -1,21 +1,23 @@
 import {Col, Row, Button, Space} from 'antd'
 import {Link} from 'react-router-dom'
-import styles from './Header.module.css'
+import {modalToggled} from '../../store/slices/modalsSlice'
+import {useAppDispatch} from '../../store/hooks'
 
 export function Header() {
+  const dispatch = useAppDispatch()
 
   let buttons = (
     <>
-      <Button type='primary'>Log in</Button>
-      <Button>Register</Button>
+      <Button type='primary' onClick={() => dispatch(modalToggled('login'))}>Log in</Button>
+      <Button onClick={() => dispatch(modalToggled('register'))}>Register</Button>
     </>
   )
 
-  if (true) {
+  if (false) {
     buttons = (
       <>
-        <Button type='primary'>Create post</Button>
-        <Button>My profile</Button>
+        <Button type='primary' onClick={() => dispatch(modalToggled('addPost'))}>Create post</Button>
+        <Button>My posts</Button>
       </>
     )
   }
@@ -23,7 +25,7 @@ export function Header() {
   return (
     <Row>
       <Col span={12}>
-        <Link to='/' className={styles.projectName}>
+        <Link to='/' style={{fontSize: '18px'}}>
           Mini Blog
         </Link>
       </Col>

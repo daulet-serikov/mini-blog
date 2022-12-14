@@ -14,7 +14,7 @@ export function Layout() {
         <Outlet />
       </Content>
       <Footer className={styles.footer}>
-        The purpose of this application is to demonstrate <a href='https://www.linkedin.com/in/daulet-serikov/'>Daulet Serikov</a>'s skills. The source code and details can be found <a href='https://github.com/dauletserikov/mini-blog'>here</a>.
+        The purpose of this application is to demonstrate <a href='https://www.linkedin.com/in/daulet-serikov/'>Daulet</a>'s skills. The source code and details can be found <a href='https://github.com/dauletserikov/mini-blog'>here</a>.
       </Footer>
     </AntLayout>
   )
