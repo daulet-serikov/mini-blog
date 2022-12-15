@@ -3,6 +3,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {configuration} from '../../../server/configuration'
 import {Post} from '../../../types/Post'
 import {User} from '../../../types/User'
+import {User as ServerUser} from '../../../types/server/User'
 import {RootState} from '../../store'
 import {LoginCredential} from '../../../types/LoginCredential'
 import {ApiResponse, isApiResponse} from '../../../types/Response'
@@ -43,10 +44,23 @@ export const apiSlice = createApi({
       }
     }),
     login: builder.mutation<ApiResponse, LoginCredential>({
-      query: (credential) => ({
+      query: (data) => ({
         url: '/login',
         method: 'POST',
-        body: credential
+        body: data
+      }),
+      async onCacheEntryAdded({username}, {dispatch, cacheDataLoaded}) {
+        const cache = await cacheDataLoaded
+        if (cache.data.status === 'success') {
+          dispatch(apiSlice.util.upsertQueryData('getCurrentUser', undefined, username))
+        }
+      }
+    }),
+    register: builder.mutation<ApiResponse, ServerUser>({
+      query: (data) => ({
+        url: '/register',
+        method: 'POST',
+        body: data
       }),
       async onCacheEntryAdded({username}, {dispatch, cacheDataLoaded}) {
         const cache = await cacheDataLoaded
@@ -58,7 +72,13 @@ export const apiSlice = createApi({
   })
 })
 
-export const {useGetPostsQuery, useGetUsersQuery, useLoginMutation, useGetCurrentUserQuery} = apiSlice
+export const {
+  useGetPostsQuery,
+  useGetUsersQuery,
+  useLoginMutation,
+  useGetCurrentUserQuery,
+  useRegisterMutation
+} = apiSlice
 
 export const {
   selectById: selectPostById,

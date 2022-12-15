@@ -9,6 +9,7 @@
 - user or author?
 - get rid of author index
 - unify responses
+- login and register are shown by default
 
 # ant issues
 - onFinish on login

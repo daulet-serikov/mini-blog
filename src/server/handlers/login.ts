@@ -11,6 +11,7 @@ export const login = rest.post(`${configuration.apiPrefix}/login`, async (reques
     await validate(credential)
     await authenticate(credential)
   } catch (error) {
+    // TODO: simplify
     if (error instanceof Yup.ValidationError) {
       return response(
         context.delay(configuration.delay),
@@ -34,6 +35,8 @@ export const login = rest.post(`${configuration.apiPrefix}/login`, async (reques
 
 
 async function validate(data: LoginCredential) {
+  // TODO: get rid of variables
+  // TODO: mark username as optional? check reg as well
   const username = data.username?.trim()
   const password = data.password
 
@@ -46,7 +49,12 @@ async function validate(data: LoginCredential) {
 }
 
 async function authenticate(data: LoginCredential) {
+  if (sessionStorage.getItem('username')) {
+    throw new Error('You have already been logged in')
+  }
+
   const user = await getUser(data.username)
+
   if (!user || user.password !== data.password) {
     throw new Error('The provided data is incorrect')
   }

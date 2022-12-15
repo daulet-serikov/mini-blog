@@ -67,6 +67,7 @@ export async function getPosts() {
   })
 }
 
+// TODO: simplify
 export async function getUsers(passwords: false): Promise<ClientUser[]>
 export async function getUsers(passwords: true): Promise<User[]>
 export async function getUsers(): Promise<ClientUser[]>
