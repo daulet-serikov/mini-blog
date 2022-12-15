@@ -1,5 +1,5 @@
-import {User} from './types/User'
-import {Post} from './types/Post'
+import {User} from '../types/server/User'
+import {Post} from '../types/server/Post'
 
 export const users: User[] = [
   {

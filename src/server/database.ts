@@ -1,5 +1,5 @@
-import {User} from './types/User'
-import {Post} from './types/Post'
+import {User} from '../types/server/User'
+import {Post} from '../types/server/Post'
 import {User as ClientUser} from '../types/User'
 import {users as mockUsers, posts as mockPosts} from './mock-data'
 
@@ -94,6 +94,17 @@ export async function getUsers(passwords = false): Promise<ClientUser[] | User[]
 export async function addPost(post: Post) {
   const posts = await getObjectStore('posts', 'readwrite')
   posts.add(post)
+}
+
+export async function getUser(username: string): Promise<User> {
+  const users = await getObjectStore('users', 'readonly')
+  const request = users.get(username)
+
+  return new Promise<User>(resolve => {
+    request.onsuccess = () => {
+      resolve(request.result)
+    }
+  })
 }
 
 export async function addUser(user: User) {

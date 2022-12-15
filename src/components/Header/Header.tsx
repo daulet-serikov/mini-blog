@@ -2,9 +2,11 @@ import {Col, Row, Button, Space} from 'antd'
 import {Link} from 'react-router-dom'
 import {modalToggled} from '../../store/slices/modalsSlice'
 import {useAppDispatch} from '../../store/hooks'
+import {useGetCurrentUserQuery} from '../../store/slices/api/apiSlice'
 
 export function Header() {
   const dispatch = useAppDispatch()
+  const {data: currentUser} = useGetCurrentUserQuery()
 
   let buttons = (
     <>
@@ -13,7 +15,7 @@ export function Header() {
     </>
   )
 
-  if (false) {
+  if (currentUser) {
     buttons = (
       <>
         <Button type='primary' onClick={() => dispatch(modalToggled('addPost'))}>Create post</Button>

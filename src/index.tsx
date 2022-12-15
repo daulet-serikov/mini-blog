@@ -19,6 +19,7 @@ const router = createBrowserRouter(routes)
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
+store.dispatch(apiSlice.endpoints.getCurrentUser.initiate())
 store.dispatch(apiSlice.endpoints.getPosts.initiate())
 store.dispatch(apiSlice.endpoints.getUsers.initiate())
 

@@ -1,10 +1,53 @@
 import {rest} from 'msw'
 import {LoginCredential} from '../../types/LoginCredential'
 import {configuration} from '../configuration'
+import * as Yup from 'yup'
+import {getUser} from '../database'
 
 export const login = rest.post(`${configuration.apiPrefix}/login`, async (request, response, context) => {
-  const data = await request.json<LoginCredential>()
-  console.log(data)
+  const credential = await request.json<LoginCredential>()
 
-  return response(context.delay(configuration.delay), context.json({success: true}))
+  try {
+    await validate(credential)
+    await authenticate(credential)
+  } catch (error) {
+    if (error instanceof Yup.ValidationError) {
+      return response(
+        context.delay(configuration.delay),
+        context.json({status: 'error', data: 'The provided data is invalid'})
+      )
+    } else if (error instanceof Error) {
+      return response(
+        context.delay(configuration.delay),
+        context.json({status: 'error', data: error.message})
+      )
+    }
+  }
+
+  sessionStorage.setItem('username', credential.username)
+
+  return response(
+    context.delay(configuration.delay),
+    context.json({status: 'success'})
+  )
 })
+
+
+async function validate(data: LoginCredential) {
+  const username = data.username?.trim()
+  const password = data.password
+
+  if (!username || !password) {
+    throw new Error('The provided data is invalid')
+  }
+
+  await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(username)
+  await Yup.string().min(5).max(15).validate(password)
+}
+
+async function authenticate(data: LoginCredential) {
+  const user = await getUser(data.username)
+  if (!user || user.password !== data.password) {
+    throw new Error('The provided data is incorrect')
+  }
+}

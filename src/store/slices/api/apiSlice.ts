@@ -5,6 +5,7 @@ import {Post} from '../../../types/Post'
 import {User} from '../../../types/User'
 import {RootState} from '../../store'
 import {LoginCredential} from '../../../types/LoginCredential'
+import {ApiResponse, isApiResponse} from '../../../types/Response'
 
 const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
@@ -31,17 +32,33 @@ export const apiSlice = createApi({
         return usersAdapter.setAll(usersInitialState, response as User[])
       }
     }),
-    login: builder.mutation<User, LoginCredential>({
+    getCurrentUser: builder.query<string | null, void>({
+      query: () => '/currentUser',
+      transformResponse(response) {
+        if (isApiResponse(response) && response.status === 'success') {
+          return response.data || null
+        }
+
+        return null
+      }
+    }),
+    login: builder.mutation<ApiResponse, LoginCredential>({
       query: (credential) => ({
         url: '/login',
         method: 'POST',
         body: credential
-      })
+      }),
+      async onCacheEntryAdded({username}, {dispatch, cacheDataLoaded}) {
+        const cache = await cacheDataLoaded
+        if (cache.data.status === 'success') {
+          dispatch(apiSlice.util.upsertQueryData('getCurrentUser', undefined, username))
+        }
+      }
     })
   })
 })
 
-export const {useGetPostsQuery, useGetUsersQuery, useLoginMutation} = apiSlice
+export const {useGetPostsQuery, useGetUsersQuery, useLoginMutation, useGetCurrentUserQuery} = apiSlice
 
 export const {
   selectById: selectPostById,

@@ -8,6 +8,7 @@
 - modal bug on close
 - user or author?
 - get rid of author index
+- unify responses
 
 # ant issues
 - onFinish on login

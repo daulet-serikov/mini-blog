@@ -1,4 +1,4 @@
-import {User as ClientUser} from '../../types/User'
+import {User as ClientUser} from '../User'
 
 export interface User extends ClientUser {
   password: string
