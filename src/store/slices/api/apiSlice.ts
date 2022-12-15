@@ -4,6 +4,7 @@ import {configuration} from '../../../server/configuration'
 import {Post} from '../../../types/Post'
 import {User} from '../../../types/User'
 import {RootState} from '../../store'
+import {LoginCredential} from '../../../types/LoginCredential'
 
 const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
@@ -29,11 +30,18 @@ export const apiSlice = createApi({
       transformResponse: (response) => {
         return usersAdapter.setAll(usersInitialState, response as User[])
       }
+    }),
+    login: builder.mutation<User, LoginCredential>({
+      query: (credential) => ({
+        url: '/login',
+        method: 'POST',
+        body: credential
+      })
     })
   })
 })
 
-export const {useGetPostsQuery, useGetUsersQuery} = apiSlice
+export const {useGetPostsQuery, useGetUsersQuery, useLoginMutation} = apiSlice
 
 export const {
   selectById: selectPostById,

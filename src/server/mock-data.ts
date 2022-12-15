@@ -6,19 +6,19 @@ export const users: User[] = [
     username: 'daulet',
     firstName: 'Daulet',
     lastName: 'Serikov',
-    password: '1234'
+    password: '111111'
   },
   {
     username: 'alyce2000',
     firstName: 'Alyce',
     lastName: 'Carter',
-    password: '5678'
+    password: '222222'
   },
   {
     username: 'randyrandy',
     firstName: 'Randy',
     lastName: 'Paulson',
-    password: '101010'
+    password: '333333'
   }
 ]
 

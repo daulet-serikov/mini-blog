@@ -1,4 +1,5 @@
 # TODOs
+- get rid of yup and formik
 - update readme
 - dynamic titles
 - display publication date
@@ -7,6 +8,10 @@
 - modal bug on close
 - user or author?
 - get rid of author index
+
+# ant issues
+- onFinish on login
+- modal flickering
 
 # Getting Started with Create React App
 
