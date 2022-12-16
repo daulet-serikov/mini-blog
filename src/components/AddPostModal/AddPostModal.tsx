@@ -2,11 +2,21 @@ import {Button, Form, Input, Modal} from 'antd'
 import styles from './AddPostModal.module.css'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {modalToggled} from '../../store/slices/modalsSlice'
+import {useState} from 'react'
+
+// TODO move somewhere?
+export interface PostFields {
+  title: string
+  content: string
+}
 
 export function AddPostModal() {
   const [form] = Form.useForm()
   const open = useAppSelector(state => state.modals.addPost)
   const dispatch = useAppDispatch()
+  const [validateTrigger, setValidateTrigger] = useState('onFinish')
+  const [showError, setShowError] = useState(false)
+  const [errorText, setErrorText] = useState('')
 
   const onSubmit = () => {
     console.log('submitted')

@@ -19,6 +19,7 @@ export const registerHandler = rest.post(`${configuration.apiPrefix}/register`, 
     }
   }
 
+  // TODO move to try
   sessionStorage.setItem('username', data.username)
 
   return response(
@@ -54,7 +55,7 @@ async function register(data: User) {
   const user = await getUser(data.username)
 
   if (user) {
-    throw new Error('You have already been registered')
+    throw new Error('The username is taken')
   }
 
   await addUser(data)

@@ -1,6 +1,8 @@
+import {Post} from './server/Post'
+
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: string
+  data?: string | Post // TODO improve
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {

@@ -1,9 +1,9 @@
 import {Col, Row, Button, Space, Dropdown, MenuProps} from 'antd'
-import {DownOutlined, UserOutlined} from '@ant-design/icons'
 import {Link} from 'react-router-dom'
 import {modalToggled} from '../../store/slices/modalsSlice'
 import {useAppDispatch} from '../../store/hooks'
 import {useGetCurrentUserQuery} from '../../store/slices/api/apiSlice'
+import {UserOutlined, LogoutOutlined} from '@ant-design/icons'
 
 export function Header() {
   const dispatch = useAppDispatch()
@@ -18,14 +18,22 @@ export function Header() {
 
   const items: MenuProps['items'] = [
     {
+      label: 'My profile',
       key: '1',
-      label: (
-        <a target='_blank' rel='noopener noreferrer' href='https://www.antgroup.com'>
-          1st menu item
-        </a>
-      )
+      icon: <UserOutlined />
+    },
+    {
+      label: 'Log out',
+      key: '2',
+      danger: true,
+      icon: <LogoutOutlined />
     }
   ]
+
+  const menuProps = {
+    items,
+    onClick: () => {console.log(1)}
+  }
 
   if (currentUser) {
     /* TODO: place closing angle braces at the new line*/
@@ -33,16 +41,8 @@ export function Header() {
       <Dropdown.Button
         onClick={() => dispatch(modalToggled('addPost'))}
         type='primary'
-        icon={<UserOutlined />}
         trigger={['click']}
-        dropdownRender={() => (
-          <Space style={{padding: 8}}>
-            <a target='_blank' rel='noopener noreferrer' href='https://www.aliyun.com'>
-              2nd menu item (disabled)
-            </a>
-            <Button type='link' onClick={() => dispatch(modalToggled('addPost'))}>Click me!</Button>
-          </Space>
-        )}
+        menu={menuProps}
       >
         Create post
       </Dropdown.Button>

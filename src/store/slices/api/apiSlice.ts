@@ -7,6 +7,7 @@ import {User as ServerUser} from '../../../types/server/User'
 import {RootState} from '../../store'
 import {LoginCredential} from '../../../types/LoginCredential'
 import {ApiResponse, isApiResponse} from '../../../types/Response'
+import {PostFields} from '../../../components/AddPostModal/AddPostModal'
 
 const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
@@ -66,6 +67,21 @@ export const apiSlice = createApi({
         const cache = await cacheDataLoaded
         if (cache.data.status === 'success') {
           dispatch(apiSlice.util.upsertQueryData('getCurrentUser', undefined, username))
+        }
+      }
+    }),
+    addPost: builder.mutation<ApiResponse, PostFields>({
+      query: (data) => ({
+        url: '/addPost',
+        method: 'POST',
+        body: data
+      }),
+      async onCacheEntryAdded(_, {dispatch, cacheDataLoaded}) {
+        const cache = await cacheDataLoaded
+        if (cache.data.status === 'success') {
+          dispatch(
+            apiSlice.util.updateQueryData('getCurrentUser', undefined, username)
+          )
         }
       }
     })
