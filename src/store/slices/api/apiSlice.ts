@@ -8,6 +8,7 @@ import {RootState} from '../../store'
 import {LoginCredential} from '../../../types/LoginCredential'
 import {ApiResponse, isApiResponse} from '../../../types/Response'
 import {PostFields} from '../../../components/AddPostModal/AddPostModal'
+import {AddPostApiResponse} from '../../../types/AddPostApiResponse'
 
 const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
@@ -34,14 +35,14 @@ export const apiSlice = createApi({
         return usersAdapter.setAll(usersInitialState, response as User[])
       }
     }),
-    getCurrentUser: builder.query<string | null, void>({
+    getCurrentUser: builder.query<string | undefined, void>({
       query: () => '/currentUser',
       transformResponse(response) {
         if (isApiResponse(response) && response.status === 'success') {
-          return response.data || null
+          return response.data!
         }
 
-        return null
+        return undefined
       }
     }),
     login: builder.mutation<ApiResponse, LoginCredential>({
@@ -70,7 +71,7 @@ export const apiSlice = createApi({
         }
       }
     }),
-    addPost: builder.mutation<ApiResponse, PostFields>({
+    addPost: builder.mutation<AddPostApiResponse, PostFields>({
       query: (data) => ({
         url: '/addPost',
         method: 'POST',
@@ -80,7 +81,13 @@ export const apiSlice = createApi({
         const cache = await cacheDataLoaded
         if (cache.data.status === 'success') {
           dispatch(
-            apiSlice.util.updateQueryData('getCurrentUser', undefined, username)
+            // TODO rewrite
+            apiSlice.util.updateQueryData('getPosts', undefined, draft => {
+              console.log(draft)
+              if (typeof cache.data.data !== 'string') {
+                postsAdapter.addOne(draft, cache.data.data!)
+              }
+            })
           )
         }
       }
@@ -93,7 +100,8 @@ export const {
   useGetUsersQuery,
   useLoginMutation,
   useGetCurrentUserQuery,
-  useRegisterMutation
+  useRegisterMutation,
+  useAddPostMutation
 } = apiSlice
 
 export const {

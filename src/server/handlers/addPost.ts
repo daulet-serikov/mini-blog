@@ -49,7 +49,7 @@ async function validate(post: RequestPost) {
   }
 
   try {
-    await Yup.string().min(10).max(50).validate(post.title)
+    await Yup.string().trim().min(10).max(50).validate(post.title)
     await Yup.string().trim().min(10).max(300).validate(post.content)
   } catch {
     throw new Error('The provided data is invalid')

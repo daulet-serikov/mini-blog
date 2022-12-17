@@ -1,8 +1,7 @@
-import {Post} from './server/Post'
-
+// TODO rename file
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: string | Post // TODO improve
+  data?: string // TODO improve?
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {
