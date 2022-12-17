@@ -1,62 +1,63 @@
 import {rest} from 'msw'
-import {User} from '../../types/server/User'
-import {configuration} from '../configuration'
 import * as Yup from 'yup'
-import {getUser, addUser} from '../database'
+import {configuration} from '../configuration'
+import * as database from '../database'
+import {RegisterFormValue} from '../../register/RegisterFormValue'
+import {ApiResponse} from '../types/ApiResponse'
+import {ApiUser} from '../types/User'
 
-export const register = rest.post(`${configuration.apiPrefix}/register`, async (request, response, context) => {
-  const data = await request.json<User>()
-
-  try {
-    await validate(data)
-    await _register(data)
-  } catch (error) {
-    if (error instanceof Error) {
+export const register = rest.post(
+  `${configuration.apiPrefix}/register`,
+  async (request, response, context) => {
+    if (sessionStorage.getItem('username')) {
       return response(
         context.delay(configuration.delay),
-        context.json({status: 'error', data: error.message})
+        context.json<ApiResponse>({status: 'error', data: 'You are logged in'})
       )
     }
+
+    const formValue = await request.json<Partial<RegisterFormValue>>()
+
+    try {
+      const user = await validate(formValue)
+      await _register(user)
+
+      sessionStorage.setItem('username', user.username)
+
+      return response(
+        context.delay(configuration.delay),
+        context.json<ApiResponse>({status: 'success'})
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        return response(
+          context.delay(configuration.delay),
+          context.json<ApiResponse>({status: 'error', data: error.message})
+        )
+      }
+    }
   }
+)
 
-  // TODO move to try
-  sessionStorage.setItem('username', data.username)
-
-  return response(
-    context.delay(configuration.delay),
-    context.json({status: 'success'})
-  )
-})
-
-
-async function validate(data: User) {
-  if (!data.username?.trim()
-      || !data.password
-      || !data.firstName?.trim()
-      || !data.lastName?.trim()) {
-    throw new Error('The provided data is invalid')
-  }
-
+async function validate(formValue: Partial<RegisterFormValue>) {
   try {
-    await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(data.username)
-    await Yup.string().min(5).max(15).validate(data.password)
-    await Yup.string().trim().min(3).max(20).validate(data.firstName)
-    await Yup.string().trim().min(3).max(20).validate(data.lastName)
+    await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(formValue.username)
+    await Yup.string().min(5).max(15).validate(formValue.password)
+    await Yup.string().trim().min(3).max(20).validate(formValue.firstName)
+    await Yup.string().trim().min(3).max(20).validate(formValue.lastName)
   } catch {
     throw new Error('The provided data is invalid')
   }
+
+  return formValue as ApiUser
 }
 
-async function _register(data: User) {
-  if (sessionStorage.getItem('username')) {
-    throw new Error('You are logged in')
-  }
+async function _register(user: ApiUser) {
+  const _user = await database.getUser(user.username)
 
-  const user = await getUser(data.username)
-
-  if (user) {
+  if (_user) {
     throw new Error('The username is taken')
   }
 
-  await addUser(data)
+  await database.addUser(user)
 }

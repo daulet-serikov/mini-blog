@@ -2,8 +2,8 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {Post} from '../types/Post'
-import {AddPostFormValue} from '../types/AddPostFormValue'
+import {ApiPost} from '../types/ApiPost'
+import {AddPostFormValue} from '../../add-post/AddPostFormValue'
 import {ApiResponse} from '../types/ApiResponse'
 
 export const addPost = rest.post(
@@ -16,12 +16,12 @@ export const addPost = rest.post(
       )
     }
 
-    const formValue = await request.json<AddPostFormValue>()
+    const formValue = await request.json<Partial<AddPostFormValue>>()
 
     try {
       const validatedFormValue = await validate(formValue)
 
-      const post: Post = {
+      const post: ApiPost = {
         ...validatedFormValue,
         author: sessionStorage.getItem('username')!,
         publicationDate: new Date().toJSON()
@@ -44,7 +44,7 @@ export const addPost = rest.post(
   }
 )
 
-async function validate(formValue: AddPostFormValue) {
+async function validate(formValue: Partial<AddPostFormValue>) {
   try {
     await Yup.string().trim().min(10).max(50).validate(formValue.title)
     await Yup.string().trim().min(10).max(300).validate(formValue.content)
@@ -52,10 +52,10 @@ async function validate(formValue: AddPostFormValue) {
     throw new Error('The provided data is invalid')
   }
 
-  return formValue as Required<AddPostFormValue>
+  return formValue as AddPostFormValue
 }
 
-async function add(post: Post) {
+async function add(post: ApiPost) {
   const posts = await database.getPosts()
 
   posts.forEach(existingPost => {

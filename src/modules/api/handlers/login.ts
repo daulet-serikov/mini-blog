@@ -2,7 +2,7 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {LoginFormValue} from '../types/LoginFormValue'
+import {LoginFormValue} from '../../login/LoginFormValue'
 import {ApiResponse} from '../types/ApiResponse'
 
 export const login = rest.post(
@@ -15,12 +15,12 @@ export const login = rest.post(
       )
     }
 
-    const formValue = await request.json<LoginFormValue>()
+    const formValue = await request.json<Partial<LoginFormValue>>()
 
     try {
-      const validatedFormValue = await validate(formValue)
+      const credential = await validate(formValue)
 
-      await authenticate(validatedFormValue)
+      await authenticate(credential)
 
       return response(
         context.delay(configuration.delay),
@@ -38,7 +38,7 @@ export const login = rest.post(
 )
 
 
-async function validate(formValue: LoginFormValue) {
+async function validate(formValue: Partial<LoginFormValue>) {
   try {
     await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(formValue.username)
     await Yup.string().min(5).max(15).validate(formValue.password)
@@ -46,15 +46,15 @@ async function validate(formValue: LoginFormValue) {
     throw new Error('The provided data is invalid')
   }
 
-  return formValue as Required<LoginFormValue>
+  return formValue as LoginFormValue
 }
 
-async function authenticate(formValue: Required<LoginFormValue>) {
-  const user = await database.getUser(formValue.username)
+async function authenticate(credential: LoginFormValue) {
+  const user = await database.getUser(credential.username)
 
-  if (!user || user.password !== formValue.password) {
+  if (!user || user.password !== credential.password) {
     throw new Error('The provided data is incorrect')
   }
 
-  sessionStorage.setItem('username', formValue.username)
+  sessionStorage.setItem('username', credential.username)
 }

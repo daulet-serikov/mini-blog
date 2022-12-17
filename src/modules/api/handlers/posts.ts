@@ -1,6 +1,7 @@
 import {rest} from 'msw'
 import {configuration} from '../configuration'
 import * as database from '../database'
+import {ApiResponse} from '../types/ApiResponse'
 
 export const posts = rest.get(
   `${configuration.apiPrefix}/posts`,
@@ -9,7 +10,7 @@ export const posts = rest.get(
 
     return response(
       context.delay(configuration.delay),
-      context.json(posts)
+      context.json<ApiResponse>({status: 'success', data: posts})
     )
   }
 )

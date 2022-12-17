@@ -1,7 +1,10 @@
-import {User} from '../types/server/User'
-import {Post} from '../types/server/Post'
-import {User as ClientUser} from '../types/User'
-import {users as mockUsers, posts as mockPosts} from './mock-data'
+import {ApiUser} from './types/ApiUser'
+import {User} from '../user/User'
+import {ApiPost} from './types/ApiPost'
+import {
+  users as mockUsers,
+  posts as mockPosts
+} from './mock-data'
 
 let database: IDBDatabase
 let initialized = false
@@ -60,55 +63,48 @@ export async function getPosts() {
   const posts = await getObjectStore('posts', 'readonly')
   const request = posts.getAll()
 
-  return new Promise<Post[]>(resolve => {
+  return new Promise<ApiPost[]>(resolve => {
     request.onsuccess = () => {
       resolve(request.result)
     }
   })
 }
 
-// TODO: simplify
-export async function getUsers(passwords: false): Promise<ClientUser[]>
-export async function getUsers(passwords: true): Promise<User[]>
-export async function getUsers(): Promise<ClientUser[]>
-export async function getUsers(passwords = false): Promise<ClientUser[] | User[]> {
+export async function getUsers(): Promise<User[]> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.getAll()
 
   return new Promise(resolve => {
     request.onsuccess = () => {
-      const users = request.result as User[]
+      const apiUsers = request.result as ApiUser[]
 
-      if (!passwords) {
-        const passwordlessUsers: ClientUser[] = users.map(user => {
-          const {password: _, ...passwordlessUser} = user
-          return passwordlessUser as ClientUser
-        })
-        resolve(passwordlessUsers)
-      }
+      const users: User[] = apiUsers.map(user => {
+        const {password: _, ...userWithPasswordOmitted} = user
+        return userWithPasswordOmitted
+      })
 
       resolve(users)
     }
   })
 }
 
-export async function addPost(post: Post) {
+export async function addPost(post: ApiPost) {
   const posts = await getObjectStore('posts', 'readwrite')
   posts.add(post)
 }
 
-export async function getUser(username: string): Promise<User> {
+export async function getUser(username: string): Promise<ApiUser> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.get(username)
 
-  return new Promise<User>(resolve => {
+  return new Promise<ApiUser>(resolve => {
     request.onsuccess = () => {
       resolve(request.result)
     }
   })
 }
 
-export async function addUser(user: User) {
+export async function addUser(user: ApiUser) {
   const users = await getObjectStore('users', 'readwrite')
   users.add(user)
 }

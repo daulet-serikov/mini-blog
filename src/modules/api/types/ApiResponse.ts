@@ -1,6 +1,9 @@
+import {ApiPost} from './ApiPost'
+import {ApiUser} from './ApiUser'
+
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: any
+  data?: string | ApiPost | ApiPost[] | ApiUser[]
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {
