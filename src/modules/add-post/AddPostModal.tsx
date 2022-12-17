@@ -5,12 +5,6 @@ import {modalToggled} from '../../store/slices/modalsSlice'
 import {useState} from 'react'
 import {useAddPostMutation} from '../../store/slices/api/apiSlice'
 
-// TODO move somewhere?
-export interface PostFields {
-  title: string
-  content: string
-}
-
 export function AddPostModal() {
   const [form] = Form.useForm()
   const open = useAppSelector(state => state.modals.addPost)

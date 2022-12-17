@@ -4,12 +4,12 @@ import {configuration} from '../configuration'
 import * as Yup from 'yup'
 import {getUser, addUser} from '../database'
 
-export const registerHandler = rest.post(`${configuration.apiPrefix}/register`, async (request, response, context) => {
+export const register = rest.post(`${configuration.apiPrefix}/register`, async (request, response, context) => {
   const data = await request.json<User>()
 
   try {
     await validate(data)
-    await register(data)
+    await _register(data)
   } catch (error) {
     if (error instanceof Error) {
       return response(
@@ -47,7 +47,7 @@ async function validate(data: User) {
   }
 }
 
-async function register(data: User) {
+async function _register(data: User) {
   if (sessionStorage.getItem('username')) {
     throw new Error('You are logged in')
   }

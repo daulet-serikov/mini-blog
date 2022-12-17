@@ -1,7 +1,7 @@
 import {rest} from 'msw'
 import {configuration} from '../configuration'
 
-export const currentUser = rest.get(`${configuration.apiPrefix}/currentUser`, async (_request, response, context) => {
+export const user = rest.get(`${configuration.apiPrefix}/currentUser`, async (_request, response, context) => {
   const username = sessionStorage.getItem('username')
 
   if (!username) {
