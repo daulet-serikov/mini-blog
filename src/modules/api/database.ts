@@ -1,6 +1,5 @@
-import {ApiUser} from './types/ApiUser'
-import {User} from '../user/User'
-import {ApiPost} from './types/ApiPost'
+import {Post} from './types/Post'
+import {User} from './types/User'
 import {
   users as mockUsers,
   posts as mockPosts
@@ -17,7 +16,7 @@ async function getDatabase() {
   return database
 }
 
-async function initialize() {
+function initialize() {
   return new Promise<void>(resolve => {
     const openRequest = indexedDB.open('mini-blog')
 
@@ -59,52 +58,63 @@ async function getObjectStore(store: string, mode: IDBTransactionMode) {
   return database.transaction(store, mode).objectStore(store)
 }
 
-export async function getPosts() {
+export async function getPosts(): Promise<Post[]> {
   const posts = await getObjectStore('posts', 'readonly')
   const request = posts.getAll()
 
-  return new Promise<ApiPost[]>(resolve => {
+  return new Promise(resolve => {
     request.onsuccess = () => {
       resolve(request.result)
     }
   })
 }
 
-export async function getUsers(): Promise<User[]> {
+export async function getUsers(): Promise<Omit<User, 'password'>[]> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.getAll()
 
   return new Promise(resolve => {
     request.onsuccess = () => {
-      const apiUsers = request.result as ApiUser[]
+      const users = request.result as User[]
 
-      const users: User[] = apiUsers.map(user => {
+      const usersWithPasswordOmitted: Omit<User, 'password'>[] = users.map(user => {
         const {password: _, ...userWithPasswordOmitted} = user
         return userWithPasswordOmitted
       })
 
-      resolve(users)
+      resolve(usersWithPasswordOmitted)
     }
   })
 }
 
-export async function addPost(post: ApiPost) {
+export async function addPost(post: Omit<Post, 'id'>): Promise<Post> {
   const posts = await getObjectStore('posts', 'readwrite')
-  posts.add(post)
+  const request = posts.add(post)
+
+  return new Promise(resolve => {
+    request.onsuccess = async () => {
+      const posts = await getObjectStore('posts', 'readonly')
+      const subRequest = posts.get(request.result)
+
+      subRequest.onsuccess = () => {
+        resolve(subRequest.result)
+      }
+    }
+  })
 }
 
-export async function getUser(username: string): Promise<ApiUser> {
+export async function getUser(username: string): Promise<User> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.get(username)
 
-  return new Promise<ApiUser>(resolve => {
+  return new Promise(resolve => {
     request.onsuccess = () => {
       resolve(request.result)
     }
   })
 }
 
-export async function addUser(user: ApiUser) {
+export async function addUser(user: User) {
   const users = await getObjectStore('users', 'readwrite')
   users.add(user)
 }

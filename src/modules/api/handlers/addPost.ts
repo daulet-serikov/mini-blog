@@ -2,9 +2,9 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {ApiPost} from '../types/ApiPost'
-import {AddPostFormValue} from '../../add-post/AddPostFormValue'
+import {Post} from '../types/Post'
 import {ApiResponse} from '../types/ApiResponse'
+import {AddPostFormValue} from '../../add-post/AddPostFormValue'
 
 export const addPost = rest.post(
   `${configuration.apiPrefix}/addPost`,
@@ -21,13 +21,13 @@ export const addPost = rest.post(
     try {
       const validatedFormValue = await validate(formValue)
 
-      const post: ApiPost = {
+      const postToAdd: Omit<Post, 'id'> = {
         ...validatedFormValue,
         author: sessionStorage.getItem('username')!,
         publicationDate: new Date().toJSON()
       }
 
-      await add(post)
+      const post = await add(postToAdd)
 
       return response(
         context.delay(configuration.delay),
@@ -55,7 +55,7 @@ async function validate(formValue: Partial<AddPostFormValue>) {
   return formValue as AddPostFormValue
 }
 
-async function add(post: ApiPost) {
+async function add(post: Omit<Post, 'id'>) {
   const posts = await database.getPosts()
 
   posts.forEach(existingPost => {
@@ -64,5 +64,5 @@ async function add(post: ApiPost) {
     }
   })
 
-  await database.addPost(post)
+  return database.addPost(post)
 }

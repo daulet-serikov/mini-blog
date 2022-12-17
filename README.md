@@ -10,6 +10,9 @@
 - get rid of author index
 - unify responses
 - login and register are shown by default
+- check asyncs
+- get rid of data var name
+- is layout module?
 
 # ant issues
 - onFinish on login

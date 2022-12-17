@@ -4,7 +4,6 @@ import {configuration} from '../configuration'
 import * as database from '../database'
 import {RegisterFormValue} from '../../register/RegisterFormValue'
 import {ApiResponse} from '../types/ApiResponse'
-import {ApiUser} from '../types/User'
 
 export const register = rest.post(
   `${configuration.apiPrefix}/register`,
@@ -49,15 +48,15 @@ async function validate(formValue: Partial<RegisterFormValue>) {
     throw new Error('The provided data is invalid')
   }
 
-  return formValue as ApiUser
+  return formValue as RegisterFormValue
 }
 
-async function _register(user: ApiUser) {
-  const _user = await database.getUser(user.username)
+async function _register(formValue: RegisterFormValue) {
+  const user = await database.getUser(formValue.username)
 
-  if (_user) {
+  if (user) {
     throw new Error('The username is taken')
   }
 
-  await database.addUser(user)
+  await database.addUser(formValue)
 }

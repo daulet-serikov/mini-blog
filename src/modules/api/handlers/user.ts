@@ -3,7 +3,7 @@ import {configuration} from '../configuration'
 import {ApiResponse} from '../types/ApiResponse'
 
 export const user = rest.get(
-  `${configuration.apiPrefix}/currentUser`,
+  `${configuration.apiPrefix}/user`,
   async (_request, response, context) => {
     const username = sessionStorage.getItem('username')
 

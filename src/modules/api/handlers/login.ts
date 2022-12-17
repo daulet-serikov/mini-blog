@@ -37,7 +37,6 @@ export const login = rest.post(
   }
 )
 
-
 async function validate(formValue: Partial<LoginFormValue>) {
   try {
     await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(formValue.username)

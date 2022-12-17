@@ -1,17 +1,13 @@
-import {ApiPost} from './ApiPost'
-import {ApiUser} from './ApiUser'
+import {Post} from './Post'
+import {User} from './User'
 
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: string | ApiPost | ApiPost[] | ApiUser[]
+  data?: string | Post | Post[] | Omit<User, 'password'>[]
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {
   const apiResponse = data as ApiResponse
 
-  if (apiResponse.status === 'success' || apiResponse.status === 'error') {
-    return true
-  }
-
-  return false
+  return apiResponse.status === 'success' || apiResponse.status === 'error'
 }
