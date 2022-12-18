@@ -4,7 +4,7 @@ import {ApiResponse} from '../types/ApiResponse'
 
 export const logout = rest.post(
   `${configuration.apiPrefix}/logout`,
-  async (_request, response, context) => {
+  (_request, response, context) => {
     if (!sessionStorage.getItem('username')) {
       return response(
         context.delay(configuration.delay),

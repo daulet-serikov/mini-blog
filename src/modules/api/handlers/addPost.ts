@@ -2,7 +2,7 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {Post} from '../types/Post'
+import {PostWithoutId} from '../types/PostWithoutId'
 import {ApiResponse} from '../types/ApiResponse'
 import {AddPostFormValue} from '../../add-post/AddPostFormValue'
 
@@ -21,7 +21,7 @@ export const addPost = rest.post(
     try {
       const validatedFormValue = validate(formValue)
 
-      const postToAdd: Omit<Post, 'id'> = {
+      const postToAdd: PostWithoutId = {
         ...validatedFormValue,
         author: sessionStorage.getItem('username')!,
         publicationDate: new Date().toJSON()
@@ -60,7 +60,7 @@ function validate(formValue: Partial<AddPostFormValue>) {
   return formValue as AddPostFormValue
 }
 
-async function add(post: Omit<Post, 'id'>) {
+async function add(post: PostWithoutId) {
   const posts = await database.getPosts()
 
   posts.forEach(existingPost => {

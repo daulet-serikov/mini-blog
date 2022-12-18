@@ -3,23 +3,26 @@ import {isSuccessLoginApiResponse, LoginApiResponse} from './LoginApiResponse'
 import {LoginFormValue} from './LoginFormValue'
 
 export const loginApiSlice = apiSlice.injectEndpoints({
-  endpoints: builder => ({
-    login: builder.mutation<LoginApiResponse, LoginFormValue>({
-      query: (data) => ({
-        url: '/login',
-        method: 'POST',
-        body: data
-      }),
-      async onCacheEntryAdded(_, {dispatch, cacheDataLoaded}) {
-        const cache = await cacheDataLoaded
-        const response = cache.data
+  endpoints(builder) {
+    return {
+      login: builder.mutation<LoginApiResponse, LoginFormValue>({
+        query(data) {
+          return {
+            url: '/login',
+            method: 'POST',
+            body: data
+          }
+        },
+        async onCacheEntryAdded(_, {dispatch, cacheDataLoaded}) {
+          const {data: response} = await cacheDataLoaded
 
-        if (isSuccessLoginApiResponse(response)) {
-          dispatch(apiSlice.util.upsertQueryData('getUser', undefined, response.data))
+          if (isSuccessLoginApiResponse(response)) {
+            dispatch(apiSlice.util.updateQueryData('getUser', undefined, () => response.data))
+          }
         }
-      }
-    })
-  })
+      })
+    }
+  }
 })
 
 export const {useLoginMutation} = loginApiSlice

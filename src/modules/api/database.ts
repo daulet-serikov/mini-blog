@@ -1,5 +1,7 @@
 import {Post} from './types/Post'
 import {User} from './types/User'
+import {ClientUser} from './types/ClientUser'
+import {PostWithoutId} from './types/PostWithoutId'
 import {
   users as mockUsers,
   posts as mockPosts
@@ -69,7 +71,7 @@ export async function getPosts(): Promise<Post[]> {
   })
 }
 
-export async function getUsers(): Promise<Omit<User, 'password'>[]> {
+export async function getUsers(): Promise<ClientUser[]> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.getAll()
 
@@ -77,7 +79,7 @@ export async function getUsers(): Promise<Omit<User, 'password'>[]> {
     request.onsuccess = () => {
       const users = request.result as User[]
 
-      const usersWithPasswordOmitted: Omit<User, 'password'>[] = users.map(user => {
+      const usersWithPasswordOmitted: ClientUser[] = users.map(user => {
         const {password: _, ...userWithPasswordOmitted} = user
         return userWithPasswordOmitted
       })
@@ -87,7 +89,7 @@ export async function getUsers(): Promise<Omit<User, 'password'>[]> {
   })
 }
 
-export async function addPost(post: Omit<Post, 'id'>): Promise<Post> {
+export async function addPost(post: PostWithoutId): Promise<Post> {
   const posts = await getObjectStore('posts', 'readwrite')
   const request = posts.add(post)
 
@@ -104,11 +106,11 @@ export async function addPost(post: Omit<Post, 'id'>): Promise<Post> {
 }
 
 export async function getUser(username: string | IDBValidKey, password: false)
-  : Promise<Omit<User, 'password'>>
+  : Promise<ClientUser>
 export async function getUser(username: string | IDBValidKey)
   : Promise<User>
 export async function getUser(username: string | IDBValidKey, password: boolean = true)
-  : Promise<User | Omit<User, 'password'>> {
+  : Promise<User | ClientUser> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.get(username)
 
@@ -124,7 +126,7 @@ export async function getUser(username: string | IDBValidKey, password: boolean 
   })
 }
 
-export async function addUser(user: User): Promise<Omit<User, 'password'>> {
+export async function addUser(user: User): Promise<ClientUser> {
   const users = await getObjectStore('users', 'readwrite')
   const request = users.add(user)
 

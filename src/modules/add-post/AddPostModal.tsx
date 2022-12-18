@@ -67,7 +67,6 @@ export function AddPostModal() {
             {min: 10, message: 'The minimum length is 10 characters'},
             {max: 50, message: 'The maximum length is 50 characters'}
           ]}
-          normalize={value => value.trim()}
         >
           <Input />
         </Form.Item>
@@ -79,7 +78,6 @@ export function AddPostModal() {
             {min: 10, message: 'The minimum length is 10 characters'},
             {max: 300, message: 'The maximum length is 300 characters'}
           ]}
-          normalize={value => value.trim()}
         >
           <Input.TextArea rows={4} />
         </Form.Item>

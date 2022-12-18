@@ -1,8 +1,8 @@
 import {ApiResponse} from '../api/types/ApiResponse'
-import {User} from '../api/types/User'
+import {ClientUser} from '../api/types/ClientUser'
 
 interface SuccessUsersApiResponse extends ApiResponse {
-  data: Omit<User, 'password'>[]
+  data: ClientUser[]
 }
 
 export function isSuccessUsersApiResponse(

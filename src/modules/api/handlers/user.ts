@@ -4,7 +4,7 @@ import {ApiResponse} from '../types/ApiResponse'
 
 export const user = rest.get(
   `${configuration.apiPrefix}/user`,
-  async (_request, response, context) => {
+  (_request, response, context) => {
     const username = sessionStorage.getItem('username')
 
     if (!username) {

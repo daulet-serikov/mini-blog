@@ -3,7 +3,7 @@ import {selectPostIds, useGetPostsQuery, useGetUsersQuery} from '../store/apiSli
 import {useAppSelector} from '../store/hooks'
 import {Post} from '../post/Post'
 
-export const Posts = () => {
+export function Posts() {
   const {
     isSuccess: isPostsSuccess,
     isLoading: isPostsLoading
@@ -28,7 +28,7 @@ export const Posts = () => {
 
   if (isDataLoaded) {
     content = (
-      <Space direction='vertical'>
+      <Space direction='vertical' style={{display: 'flex', marginTop: 8}}>
         {postIds.map(id => <Post key={id} id={id} />)}
       </Space>
     )

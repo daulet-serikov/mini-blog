@@ -1,9 +1,9 @@
 import {Post} from './Post'
-import {User} from './User'
+import {ClientUser} from './ClientUser'
 
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: string | Post | Post[] | Omit<User, 'password'>[] | Omit<User, 'password'>
+  data?: string | Post | Post[] | ClientUser[] | ClientUser
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {

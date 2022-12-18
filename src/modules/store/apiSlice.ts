@@ -2,57 +2,69 @@ import {createEntityAdapter, EntityState, createSelector} from '@reduxjs/toolkit
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {configuration} from '../api/configuration'
 import {Post} from '../api/types/Post'
-import {User} from '../api/types/User'
+import {ClientUser} from '../api/types/ClientUser'
 import {isApiResponse} from '../api/types/ApiResponse'
 import {RootState} from './store'
-import {isSuccessUserApiResponse} from './SuccessUserApiResponse'
-import {isSuccessUsersApiResponse} from './SuccessUsersApiResponse'
-import {isSuccessPostsApiResponse} from './SuccessPostsApiResponse'
+import {isSuccessUserApiResponse} from './types/SuccessUserApiResponse'
+import {isSuccessUsersApiResponse} from './types/SuccessUsersApiResponse'
+import {isSuccessPostsApiResponse} from './types/SuccessPostsApiResponse'
 
 export const postsAdapter = createEntityAdapter<Post>({
-  sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
+  sortComparer(a, b) {
+    return b.publicationDate.localeCompare(a.publicationDate)
+  }
 })
 const postsInitialState = postsAdapter.getInitialState()
 
-export const usersAdapter = createEntityAdapter<Omit<User, 'password'>>({
-  selectId: (user) => user.username
+export const usersAdapter = createEntityAdapter<ClientUser>({
+  selectId(user) {
+    return user.username
+  }
 })
 const usersInitialState = usersAdapter.getInitialState()
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({baseUrl: configuration.apiPrefix}),
-  endpoints: builder => ({
-    getPosts: builder.query<EntityState<Post>, void>({
-      query: () => '/posts',
-      transformResponse: (response) => {
-        if (isApiResponse(response) && isSuccessPostsApiResponse(response)) {
-          return postsAdapter.setAll(postsInitialState, response.data)
-        }
+  endpoints(builder) {
+    return {
+      getPosts: builder.query<EntityState<Post>, void>({
+        query() {
+          return '/posts'
+        },
+        transformResponse(response) {
+          if (isApiResponse(response) && isSuccessPostsApiResponse(response)) {
+            return postsAdapter.setAll(postsInitialState, response.data)
+          }
 
-        return postsInitialState
-      }
-    }),
-    getUsers: builder.query<EntityState<Omit<User, 'password'>>, void>({
-      query: () => '/users',
-      transformResponse: (response) => {
-        if (isApiResponse(response) && isSuccessUsersApiResponse(response)) {
-          return usersAdapter.setAll(usersInitialState, response.data)
+          return postsInitialState
         }
+      }),
+      getUsers: builder.query<EntityState<ClientUser>, void>({
+        query() {
+          return '/users'
+        },
+        transformResponse(response) {
+          if (isApiResponse(response) && isSuccessUsersApiResponse(response)) {
+            return usersAdapter.setAll(usersInitialState, response.data)
+          }
 
-        return usersInitialState
-      }
-    }),
-    getUser: builder.query<string | undefined, void>({
-      query: () => '/user',
-      transformResponse(response) {
-        if (isApiResponse(response) && isSuccessUserApiResponse(response)) {
-          return response.data
+          return usersInitialState
         }
+      }),
+      getUser: builder.query<string | undefined, void>({
+        query() {
+          return '/user'
+        },
+        transformResponse(response) {
+          if (isApiResponse(response) && isSuccessUserApiResponse(response)) {
+            return response.data
+          }
 
-        return undefined
-      }
-    })
-  })
+          return undefined
+        }
+      })
+    }
+  }
 })
 
 export const {

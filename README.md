@@ -1,28 +1,8 @@
 # TODOs
-- get rid of yup and formik
 - update readme
 - dynamic titles
-- display publication date
-- remove css files
 - rename some files/directories
-- modal bug on close
-- user or author?
-- get rid of author index
-- unify responses
-- login and register are shown by default
-- check asyncs
-- get rid of data var name
 - is layout module?
-- get rid of Omit Users?
-- get rid of .? ??
-- use function declaration
-- const cache = await cacheDataLoaded use distructuring
-- get rid of upsert?
-- get rid of trim
-
-# ant issues
-- onFinish on login
-- modal flickering
 
 # Getting Started with Create React App
 

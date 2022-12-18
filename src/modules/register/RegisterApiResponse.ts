@@ -1,9 +1,9 @@
 import {ApiResponse} from '../api/types/ApiResponse'
-import {User} from '../api/types/User'
+import {ClientUser} from '../api/types/ClientUser'
 
 interface SuccessRegisterApiResponse extends ApiResponse {
   status: 'success'
-  data: Omit<User, 'password'>
+  data: ClientUser
 }
 
 interface ErrorRegisterApiResponse extends ApiResponse {

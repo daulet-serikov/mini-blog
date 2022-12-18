@@ -26,7 +26,7 @@ export function Header() {
       label: 'My profile',
       key: '1',
       icon: <UserOutlined />,
-      onClick: () => {
+      onClick() {
         navigate(`/${user}`)
       }
     },
@@ -35,7 +35,7 @@ export function Header() {
       key: '2',
       danger: true,
       icon: <LogoutOutlined />,
-      onClick: () => {
+      onClick() {
         if (!isLogoutLoading) {
           logout()
           navigate('/')

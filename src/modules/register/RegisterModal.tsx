@@ -89,7 +89,6 @@ export function RegisterModal() {
         <Form.Item
           name='firstName'
           label='First name'
-          normalize={value => value.trim()}
           rules={[
             {required: true, message: 'The field cannot be empty'},
             {min: 3, message: 'The minimum length is 3 characters'},
@@ -101,7 +100,6 @@ export function RegisterModal() {
         <Form.Item
           name='lastName'
           label='Last name'
-          normalize={value => value.trim()}
           rules={[
             {required: true, message: 'The field cannot be empty'},
             {min: 3, message: 'The minimum length is 3 characters'},

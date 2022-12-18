@@ -21,7 +21,7 @@ import {Post} from '../post/Post'
 import styles from './Profile.module.css'
 import {useLogoutMutation} from '../logout/logoutSlice'
 
-export const Profile = () => {
+export function Profile() {
   const {userId} = useParams()
   const navigate = useNavigate()
 
@@ -36,10 +36,10 @@ export const Profile = () => {
   const isDataLoaded = !isPostsLoading && !isUsersLoading && !isUserLoading
     && isPostsSuccess && isUsersSuccess && isUserSuccess
 
-  // TODO adjust skeleton
   let content = (
     <>
-      <Skeleton active paragraph={{rows: 1}}/>
+      <Skeleton active paragraph={{rows: 4}}/>
+      <Skeleton active paragraph={{rows: 0}}/>
       <Skeleton active paragraph={{rows: 4}}/>
       <Skeleton active paragraph={{rows: 4}}/>
       <Skeleton active paragraph={{rows: 4}}/>
@@ -84,7 +84,7 @@ export const Profile = () => {
             </Descriptions>
           </Card>
           <Typography.Title>{postsTitle}</Typography.Title>
-          <Space direction='vertical'>
+          <Space direction='vertical' style={{display: 'flex'}}>
             {postIds.map(id => <Post key={id} id={id} showAuthor={false} />)}
           </Space>
         </Space>

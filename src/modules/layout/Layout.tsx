@@ -8,7 +8,7 @@ const {Header: AntHeader, Footer, Content} = AntLayout
 export function Layout() {
   return (
     <AntLayout>
-      <AntHeader>
+      <AntHeader className={styles.header}>
         <Header />
       </AntHeader>
       <Content className={styles.content}>

@@ -41,7 +41,7 @@ export const login = rest.post(
 
 function validate(formValue: Partial<LoginFormValue>) {
   const schema = Yup.object({
-    username: Yup.string().min(5).max(15).matches(/^\w+$/),
+    username: Yup.string().trim().min(5).max(15).matches(/^\w+$/),
     password: Yup.string().min(5).max(15)
   })
 
