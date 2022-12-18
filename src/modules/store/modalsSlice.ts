@@ -17,5 +17,4 @@ const modalsSlice = createSlice({
 })
 
 export const {modalToggled} = modalsSlice.actions
-
 export const {reducer: modalsReducer} = modalsSlice

@@ -5,16 +5,18 @@ import {Post} from '../api/types/Post'
 import {User} from '../api/types/User'
 import {isApiResponse} from '../api/types/ApiResponse'
 import {RootState} from './store'
-import {isSuccessUserApiResponse} from './UserSuccessApiResponse'
+import {isSuccessUserApiResponse} from './SuccessUserApiResponse'
+import {isSuccessUsersApiResponse} from './SuccessUsersApiResponse'
+import {isSuccessPostsApiResponse} from './SuccessPostsApiResponse'
 
 export const postsAdapter = createEntityAdapter<Post>({
   sortComparer: (a, b) => b.publicationDate.localeCompare(a.publicationDate)
 })
-const usersAdapter = createEntityAdapter<Omit<User, 'password'>>({
+const postsInitialState = postsAdapter.getInitialState()
+
+export const usersAdapter = createEntityAdapter<Omit<User, 'password'>>({
   selectId: (user) => user.username
 })
-
-const postsInitialState = postsAdapter.getInitialState()
 const usersInitialState = usersAdapter.getInitialState()
 
 export const apiSlice = createApi({
@@ -23,13 +25,21 @@ export const apiSlice = createApi({
     getPosts: builder.query<EntityState<Post>, void>({
       query: () => '/posts',
       transformResponse: (response) => {
-        return postsAdapter.setAll(postsInitialState, response as Post[])
+        if (isApiResponse(response) && isSuccessPostsApiResponse(response)) {
+          return postsAdapter.setAll(postsInitialState, response.data)
+        }
+
+        return postsInitialState
       }
     }),
     getUsers: builder.query<EntityState<Omit<User, 'password'>>, void>({
       query: () => '/users',
       transformResponse: (response) => {
-        return usersAdapter.setAll(usersInitialState, response as Omit<User, 'password'>[])
+        if (isApiResponse(response) && isSuccessUsersApiResponse(response)) {
+          return usersAdapter.setAll(usersInitialState, response.data)
+        }
+
+        return usersInitialState
       }
     }),
     getUser: builder.query<string | undefined, void>({

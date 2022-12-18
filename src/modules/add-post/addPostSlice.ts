@@ -1,5 +1,5 @@
 import {apiSlice, postsAdapter} from '../store/apiSlice'
-import {AddPostApiResponse, isAddPostSuccessApiResponse} from './AddPostApiResponse'
+import {AddPostApiResponse, isSuccessAddPostApiResponse} from './AddPostApiResponse'
 import {AddPostFormValue} from './AddPostFormValue'
 
 export const addPostApiSlice = apiSlice.injectEndpoints({
@@ -14,7 +14,7 @@ export const addPostApiSlice = apiSlice.injectEndpoints({
         const cache = await cacheDataLoaded
         const response = cache.data
 
-        if (isAddPostSuccessApiResponse(response)) {
+        if (isSuccessAddPostApiResponse(response)) {
           dispatch(
             apiSlice.util.updateQueryData('getPosts', undefined, draft => {
               postsAdapter.addOne(draft, response.data)

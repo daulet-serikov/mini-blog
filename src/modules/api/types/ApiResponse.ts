@@ -3,7 +3,7 @@ import {User} from './User'
 
 export interface ApiResponse {
   status: 'success' | 'error'
-  data?: string | Post | Post[] | Omit<User, 'password'>[]
+  data?: string | Post | Post[] | Omit<User, 'password'>[] | Omit<User, 'password'>
 }
 
 export function isApiResponse(data: unknown): data is ApiResponse {

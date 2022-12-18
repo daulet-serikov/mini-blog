@@ -1,5 +1,5 @@
-import {User} from '../types/server/User'
-import {Post} from '../types/server/Post'
+import {User} from './types/User'
+import {Post} from './types/Post'
 
 export const users: User[] = [
   {
@@ -22,7 +22,7 @@ export const users: User[] = [
   }
 ]
 
-export const posts: Post[] = [
+export const posts: Omit<Post, 'id'>[] = [
   {
     title: 'HTML - HyperText Markup Language',
     content: 'HTML (HyperText Markup Language) is the most basic building block of the Web. It defines the meaning and structure of web content. Other technologies besides HTML are generally used to describe a web pages appearance/presentation (CSS) or functionality/behavior (JavaScript).',

@@ -18,14 +18,14 @@ export const register = rest.post(
     const formValue = await request.json<Partial<RegisterFormValue>>()
 
     try {
-      const user = await validate(formValue)
-      await _register(user)
+      const validatedFormValue = validate(formValue)
+      const user = await _register(validatedFormValue)
 
       sessionStorage.setItem('username', user.username)
 
       return response(
         context.delay(configuration.delay),
-        context.json<ApiResponse>({status: 'success'})
+        context.json<ApiResponse>({status: 'success', data: user})
       )
     } catch (error) {
       if (error instanceof Error) {
@@ -38,12 +38,17 @@ export const register = rest.post(
   }
 )
 
-async function validate(formValue: Partial<RegisterFormValue>) {
+function validate(formValue: Partial<RegisterFormValue>) {
+  const schema = Yup.object({
+    username: Yup.string().trim().min(5).max(15).matches(/^\w+$/),
+    password: Yup.string().min(5).max(15),
+    firstName: Yup.string().trim().min(3).max(20),
+    lastName: Yup.string().trim().min(3).max(20)
+  })
+
   try {
-    await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(formValue.username)
-    await Yup.string().min(5).max(15).validate(formValue.password)
-    await Yup.string().trim().min(3).max(20).validate(formValue.firstName)
-    await Yup.string().trim().min(3).max(20).validate(formValue.lastName)
+    schema.validateSync(formValue)
+    formValue = schema.cast(formValue)
   } catch {
     throw new Error('The provided data is invalid')
   }
@@ -58,5 +63,5 @@ async function _register(formValue: RegisterFormValue) {
     throw new Error('The username is taken')
   }
 
-  await database.addUser(formValue)
+  return database.addUser(formValue)
 }

@@ -1,31 +1,35 @@
-import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {Button, Form, Input, Modal, Alert} from 'antd'
-import styles from './LoginModal.module.css'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import {modalToggled} from '../../store/slices/modalsSlice'
+import {LockOutlined, UserOutlined} from '@ant-design/icons'
 import {useState} from 'react'
-import {LoginCredential} from '../../types/LoginCredential'
-import {useLoginMutation} from '../../store/slices/api/apiSlice'
+import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {modalToggled} from '../store/modalsSlice'
+import {LoginFormValue} from './LoginFormValue'
+import {useLoginMutation} from './loginSlice'
+import {isSuccessLoginApiResponse} from './LoginApiResponse'
 
 export function LoginModal() {
   const [validateTrigger, setValidateTrigger] = useState('onFinish')
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState('')
+
   const [form] = Form.useForm()
-  const open = useAppSelector(state => state.modals.login)
+
+  const isModalOpened = useAppSelector(state => state.modals.login)
   const dispatch = useAppDispatch()
-  const [login, {isLoading}] = useLoginMutation()
 
-  const onSubmit = async (values: LoginCredential) => {
-    const result = await login(values).unwrap()
+  const [login, {isLoading: isLoginLoading}] = useLoginMutation()
 
-    if (result.status === 'error') {
-      setErrorText(result.data ?? '')
-      setShowError(true)
-    } else {
+  const onSubmit = async (values: LoginFormValue) => {
+    const response = await login(values).unwrap()
+
+    if (isSuccessLoginApiResponse(response)) {
       dispatch(modalToggled('login'))
       form.resetFields()
       setShowError(false)
+      setErrorText('')
+    } else {
+      setErrorText(response.data)
+      setShowError(true)
     }
   }
 
@@ -37,23 +41,24 @@ export function LoginModal() {
 
   return (
     <Modal
-      open={open}
+      open={isModalOpened}
       onCancel={() => dispatch(modalToggled('login'))}
       title='Log in'
       footer={[
-        <Button key='submit' type='primary' onClick={form.submit} loading={isLoading}>
+        <Button key='submit' type='primary' onClick={form.submit} loading={isLoginLoading}>
           Submit
         </Button>
-    ]}>
+      ]}
+    >
       {showError && <Alert type='error' description={errorText} />}
       <Form
         name='login'
         onFinish={onSubmit}
         onFinishFailed={onValidationFailed}
-        className={styles.form}
+        style={{marginTop: 20}}
         form={form}
         validateTrigger={validateTrigger}
-        disabled={isLoading}
+        disabled={isLoginLoading}
       >
         <Form.Item
           name='username'

@@ -13,6 +13,7 @@
 - check asyncs
 - get rid of data var name
 - is layout module?
+- get rid of Omit Users?
 
 # ant issues
 - onFinish on login

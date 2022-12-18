@@ -18,13 +18,15 @@ export const login = rest.post(
     const formValue = await request.json<Partial<LoginFormValue>>()
 
     try {
-      const credential = await validate(formValue)
+      const credential = validate(formValue)
 
       await authenticate(credential)
 
+      sessionStorage.setItem('username', credential.username)
+
       return response(
         context.delay(configuration.delay),
-        context.json<ApiResponse>({status: 'success'})
+        context.json<ApiResponse>({status: 'success', data: credential.username})
       )
     } catch (error) {
       if (error instanceof Error) {
@@ -37,10 +39,15 @@ export const login = rest.post(
   }
 )
 
-async function validate(formValue: Partial<LoginFormValue>) {
+function validate(formValue: Partial<LoginFormValue>) {
+  const schema = Yup.object({
+    username: Yup.string().min(5).max(15).matches(/^\w+$/),
+    password: Yup.string().min(5).max(15)
+  })
+
   try {
-    await Yup.string().trim().min(5).max(15).matches(/^\w+$/).validate(formValue.username)
-    await Yup.string().min(5).max(15).validate(formValue.password)
+    schema.validateSync(formValue)
+    formValue = schema.cast(formValue)
   } catch {
     throw new Error('The provided data is invalid')
   }
@@ -54,6 +61,4 @@ async function authenticate(credential: LoginFormValue) {
   if (!user || user.password !== credential.password) {
     throw new Error('The provided data is incorrect')
   }
-
-  sessionStorage.setItem('username', credential.username)
 }

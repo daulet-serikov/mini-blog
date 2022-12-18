@@ -1,20 +1,20 @@
 import {ApiResponse} from '../api/types/ApiResponse'
 import {Post} from '../api/types/Post'
 
-interface AddPostSuccessApiResponse extends ApiResponse {
+interface SuccessAddPostApiResponse extends ApiResponse {
   status: 'success'
   data: Post
 }
 
-interface AddPostErrorApiResponse extends ApiResponse {
+interface ErrorAddPostApiResponse extends ApiResponse {
   status: 'error'
   data: string
 }
 
-export type AddPostApiResponse = AddPostSuccessApiResponse | AddPostErrorApiResponse
+export type AddPostApiResponse = SuccessAddPostApiResponse | ErrorAddPostApiResponse
 
-export function isAddPostSuccessApiResponse(
+export function isSuccessAddPostApiResponse(
   response: AddPostApiResponse
-  ): response is AddPostSuccessApiResponse {
+  ): response is SuccessAddPostApiResponse {
     return response.status === 'success'
 }

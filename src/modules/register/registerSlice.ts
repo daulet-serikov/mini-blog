@@ -1,23 +1,31 @@
-import {apiSlice, postsAdapter} from '../store/apiSlice'
-import {AddPostApiResponse, isAddPostSuccessApiResponse} from './AddPostApiResponse'
-import {AddPostFormValue} from './AddPostFormValue'
+import {apiSlice, usersAdapter} from '../store/apiSlice'
+import {isSuccessRegisterApiResponse, RegisterApiResponse} from './RegisterApiResponse'
+import {RegisterFormValue} from './RegisterFormValue'
 
-export const addPostApiSlice = apiSlice.injectEndpoints({
+export const registerApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    register: builder.mutation<ApiResponse, ServerUser>({
+    register: builder.mutation<RegisterApiResponse, RegisterFormValue>({
       query: (data) => ({
         url: '/register',
         method: 'POST',
         body: data
       }),
-      async onCacheEntryAdded({username}, {dispatch, cacheDataLoaded}) {
+      async onCacheEntryAdded(_, {dispatch, cacheDataLoaded}) {
         const cache = await cacheDataLoaded
-        if (cache.data.status === 'success') {
-          dispatch(apiSlice.util.upsertQueryData('getCurrentUser', undefined, username))
+        const response = cache.data
+
+        if (isSuccessRegisterApiResponse(response)) {
+          const user = response.data
+          dispatch(
+            apiSlice.util.updateQueryData('getUsers', undefined, draft => {
+              usersAdapter.addOne(draft, user)
+            })
+          )
+          dispatch(apiSlice.util.upsertQueryData('getUser', undefined, user.username))
         }
       }
     })
   })
 })
 
-export const {useAddPostMutation} = addPostApiSlice
+export const {useRegisterMutation} = registerApiSlice

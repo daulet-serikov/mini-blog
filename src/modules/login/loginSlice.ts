@@ -1,23 +1,25 @@
-import {apiSlice, postsAdapter} from '../store/apiSlice'
-import {AddPostApiResponse, isAddPostSuccessApiResponse} from './AddPostApiResponse'
-import {AddPostFormValue} from './AddPostFormValue'
+import {apiSlice} from '../store/apiSlice'
+import {isSuccessLoginApiResponse, LoginApiResponse} from './LoginApiResponse'
+import {LoginFormValue} from './LoginFormValue'
 
-export const addPostApiSlice = apiSlice.injectEndpoints({
+export const loginApiSlice = apiSlice.injectEndpoints({
   endpoints: builder => ({
-    login: builder.mutation<ApiResponse, LoginCredential>({
+    login: builder.mutation<LoginApiResponse, LoginFormValue>({
       query: (data) => ({
         url: '/login',
         method: 'POST',
         body: data
       }),
-      async onCacheEntryAdded({username}, {dispatch, cacheDataLoaded}) {
+      async onCacheEntryAdded(_, {dispatch, cacheDataLoaded}) {
         const cache = await cacheDataLoaded
-        if (cache.data.status === 'success') {
-          dispatch(apiSlice.util.upsertQueryData('getCurrentUser', undefined, username))
+        const response = cache.data
+
+        if (isSuccessLoginApiResponse(response)) {
+          dispatch(apiSlice.util.upsertQueryData('getUser', undefined, response.data))
         }
       }
     })
   })
 })
 
-export const {useAddPostMutation} = addPostApiSlice
+export const {useLoginMutation} = loginApiSlice

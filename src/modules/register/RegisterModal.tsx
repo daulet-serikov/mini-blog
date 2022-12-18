@@ -1,31 +1,35 @@
 import {Button, Input, Modal, Form, Alert} from 'antd'
-import {useAppSelector, useAppDispatch} from '../../store/hooks'
-import styles from './RegisterModal.module.css'
-import {modalToggled} from '../../store/slices/modalsSlice'
 import {useState} from 'react'
-import {useRegisterMutation} from '../../store/slices/api/apiSlice'
-import {User} from '../../types/server/User'
+import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {modalToggled} from '../store/modalsSlice'
+import {isSuccessRegisterApiResponse} from './RegisterApiResponse'
+import {RegisterFormValue} from './RegisterFormValue'
+import {useRegisterMutation} from './registerSlice'
 
 export function RegisterModal() {
   const [validateTrigger, setValidateTrigger] = useState('onFinish')
   const [showError, setShowError] = useState(false)
   const [errorText, setErrorText] = useState('')
-  const open = useAppSelector(state => state.modals.register)
+
   const [form] = Form.useForm()
+
+  const isModalOpened = useAppSelector(state => state.modals.register)
   const dispatch = useAppDispatch()
-  const [register, {isLoading}] = useRegisterMutation()
+
+  const [register, {isLoading: isRegisterLoading}] = useRegisterMutation()
 
 
-  const onSubmit = async (values: User) => {
-    const result = await register(values).unwrap()
+  const onSubmit = async (values: RegisterFormValue) => {
+    const response = await register(values).unwrap()
 
-    if (result.status === 'error') {
-      setErrorText(result.data ?? '')
-      setShowError(true)
-    } else {
+    if (isSuccessRegisterApiResponse(response)) {
       dispatch(modalToggled('register'))
       form.resetFields()
       setShowError(false)
+      setErrorText('')
+    } else {
+      setErrorText(response.data)
+      setShowError(true)
     }
   }
 
@@ -37,14 +41,15 @@ export function RegisterModal() {
 
   return (
     <Modal
-      open={open}
+      open={isModalOpened}
       onCancel={() => dispatch(modalToggled('register'))}
       title='Register'
       footer={[
-        <Button key='submit' type='primary' onClick={form.submit} loading={isLoading}>
+        <Button key='submit' type='primary' onClick={form.submit} loading={isRegisterLoading}>
           Submit
         </Button>
-    ]}>
+      ]}
+    >
       {showError && <Alert type='error' description={errorText} />}
       <Form
         form={form}
@@ -54,8 +59,8 @@ export function RegisterModal() {
         wrapperCol={{span: 19}}
         validateTrigger={validateTrigger}
         onFinishFailed={onValidationFailed}
-        className={styles.form}
-        disabled={isLoading}
+        style={{marginTop: 20}}
+        disabled={isRegisterLoading}
       >
         <Form.Item
           name='username'
@@ -79,9 +84,7 @@ export function RegisterModal() {
             {max: 15, message: 'The maximum length is 15 characters'}
           ]}
         >
-          <Input
-            type='password'
-          />
+          <Input type='password' />
         </Form.Item>
         <Form.Item
           name='firstName'

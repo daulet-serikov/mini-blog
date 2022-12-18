@@ -1,13 +1,13 @@
 import {Col, Row, Button, Space, Dropdown, MenuProps} from 'antd'
 import {Link} from 'react-router-dom'
-import {modalToggled} from '../../store/slices/modalsSlice'
-import {useAppDispatch} from '../../store/hooks'
-import {useGetCurrentUserQuery} from '../../store/slices/api/apiSlice'
+import {modalToggled} from '../store/modalsSlice'
+import {useAppDispatch} from '../store/hooks'
+import {useGetUserQuery} from '../store/apiSlice'
 import {UserOutlined, LogoutOutlined} from '@ant-design/icons'
 
 export function Header() {
   const dispatch = useAppDispatch()
-  const {data: currentUser} = useGetCurrentUserQuery()
+  const {data: currentUser} = useGetUserQuery()
 
   let buttons = (
     <>

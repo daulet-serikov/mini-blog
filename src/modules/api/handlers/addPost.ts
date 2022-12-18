@@ -19,7 +19,7 @@ export const addPost = rest.post(
     const formValue = await request.json<Partial<AddPostFormValue>>()
 
     try {
-      const validatedFormValue = await validate(formValue)
+      const validatedFormValue = validate(formValue)
 
       const postToAdd: Omit<Post, 'id'> = {
         ...validatedFormValue,
@@ -44,10 +44,15 @@ export const addPost = rest.post(
   }
 )
 
-async function validate(formValue: Partial<AddPostFormValue>) {
+function validate(formValue: Partial<AddPostFormValue>) {
+  const schema = Yup.object({
+    title: Yup.string().trim().min(10).max(50),
+    content: Yup.string().trim().min(10).max(300)
+  })
+
   try {
-    await Yup.string().trim().min(10).max(50).validate(formValue.title)
-    await Yup.string().trim().min(10).max(300).validate(formValue.content)
+    schema.validateSync(formValue)
+    formValue = schema.cast(formValue)
   } catch {
     throw new Error('The provided data is invalid')
   }

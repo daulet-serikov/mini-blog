@@ -2,7 +2,7 @@ import {Button, Form, Input, Modal, Alert} from 'antd'
 import {useState} from 'react'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 import {modalToggled} from '../store/modalsSlice'
-import {isAddPostSuccessApiResponse} from './AddPostApiResponse'
+import {isSuccessAddPostApiResponse} from './AddPostApiResponse'
 import {AddPostFormValue} from './AddPostFormValue'
 import {useAddPostMutation} from './addPostSlice'
 
@@ -13,20 +13,20 @@ export function AddPostModal() {
 
   const [form] = Form.useForm()
 
-  const open = useAppSelector(state => state.modals.addPost)
+  const isModalOpened = useAppSelector(state => state.modals.addPost)
   const dispatch = useAppDispatch()
 
   const [addPost, {isLoading: isAddPostLoading}] = useAddPostMutation()
 
   const onSubmit = async (values: AddPostFormValue) => {
-    const result = await addPost(values).unwrap()
+    const response = await addPost(values).unwrap()
 
-    if (isAddPostSuccessApiResponse(result)) {
+    if (isSuccessAddPostApiResponse(response)) {
       dispatch(modalToggled('addPost'))
       form.resetFields()
       setShowError(false)
     } else {
-      setErrorText(result.data)
+      setErrorText(response.data)
       setShowError(true)
     }
   }
@@ -39,7 +39,7 @@ export function AddPostModal() {
 
   return (
     <Modal
-      open={open}
+      open={isModalOpened}
       onCancel={() => dispatch(modalToggled('addPost'))}
       title='New post'
       footer={[

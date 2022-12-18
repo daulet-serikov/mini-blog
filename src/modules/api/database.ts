@@ -103,18 +103,35 @@ export async function addPost(post: Omit<Post, 'id'>): Promise<Post> {
   })
 }
 
-export async function getUser(username: string): Promise<User> {
+export async function getUser(username: string | IDBValidKey, password: false)
+  : Promise<Omit<User, 'password'>>
+export async function getUser(username: string | IDBValidKey)
+  : Promise<User>
+export async function getUser(username: string | IDBValidKey, password: boolean = true)
+  : Promise<User | Omit<User, 'password'>> {
   const users = await getObjectStore('users', 'readonly')
   const request = users.get(username)
 
   return new Promise(resolve => {
     request.onsuccess = () => {
-      resolve(request.result)
+      if (password) {
+        resolve(request.result)
+      }
+
+      const {password: _, ...user} = request.result as User
+      resolve(user)
     }
   })
 }
 
-export async function addUser(user: User) {
+export async function addUser(user: User): Promise<Omit<User, 'password'>> {
   const users = await getObjectStore('users', 'readwrite')
-  users.add(user)
+  const request = users.add(user)
+
+  return new Promise(resolve => {
+    request.onsuccess = async () => {
+      const user = await getUser(request.result, false)
+      resolve(user)
+    }
+  })
 }
