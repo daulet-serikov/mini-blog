@@ -14,6 +14,11 @@
 - get rid of data var name
 - is layout module?
 - get rid of Omit Users?
+- get rid of .? ??
+- use function declaration
+- const cache = await cacheDataLoaded use distructuring
+- get rid of upsert?
+- get rid of trim
 
 # ant issues
 - onFinish on login

@@ -1,7 +1,8 @@
 import {Layout as AntLayout} from 'antd'
 import {Outlet} from 'react-router-dom'
 import styles from './Layout.module.css'
-import {Header} from '../Header/Header'
+import {Header} from './Header'
+
 const {Header: AntHeader, Footer, Content} = AntLayout
 
 export function Layout() {

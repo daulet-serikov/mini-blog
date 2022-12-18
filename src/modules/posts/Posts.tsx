@@ -1,11 +1,22 @@
-import {selectPostIds, useGetPostsQuery} from '../../store/slices/api/apiSlice'
-import {useAppSelector} from '../../store/hooks'
-import {Post} from '../Post/Post'
 import {Space, Skeleton} from 'antd'
+import {selectPostIds, useGetPostsQuery, useGetUsersQuery} from '../store/apiSlice'
+import {useAppSelector} from '../store/hooks'
+import {Post} from '../post/Post'
 
 export const Posts = () => {
-  const {isSuccess, isLoading} = useGetPostsQuery()
+  const {
+    isSuccess: isPostsSuccess,
+    isLoading: isPostsLoading
+  } = useGetPostsQuery()
+
+  const {
+    isSuccess: isUsersSuccess,
+    isLoading: isUsersLoading
+  } = useGetUsersQuery()
+
   const postIds = useAppSelector(selectPostIds)
+
+  const isDataLoaded = !isPostsLoading && !isUsersLoading && isPostsSuccess && isUsersSuccess
 
   let content = (
     <>
@@ -15,7 +26,7 @@ export const Posts = () => {
     </>
   )
 
-  if (isSuccess && !isLoading) {
+  if (isDataLoaded) {
     content = (
       <Space direction='vertical'>
         {postIds.map(id => <Post key={id} id={id} />)}

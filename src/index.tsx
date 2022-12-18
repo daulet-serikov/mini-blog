@@ -1,23 +1,23 @@
 import React from 'react'
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import {createRoot} from 'react-dom/client'
 import {Provider} from 'react-redux'
-import {store} from './store/store'
 import reportWebVitals from './reportWebVitals'
-import './index.css'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import {routes} from './routes'
-import {apiSlice} from './store/slices/api/apiSlice'
-import {LoginModal} from './components/LoginModal/LoginModal'
-import {RegisterModal} from './components/RegisterModal/RegisterModal'
-import {AddPostModal} from './components/AddPostModal/AddPostModal'
-import {worker} from './server/server'
+import './index.css'
+import {worker} from './modules/api'
+import {store} from './modules/store/store'
+import {apiSlice} from './modules/store/apiSlice'
+import {LoginModal} from './modules/login/LoginModal'
+import {RegisterModal} from './modules/register/RegisterModal'
+import {AddPostModal} from './modules/add-post/AddPostModal'
 
 worker.start()
 
-const router = createBrowserRouter(routes)
-
 const container = document.getElementById('root')!
 const root = createRoot(container)
+
+const router = createBrowserRouter(routes)
 
 store.dispatch(apiSlice.endpoints.getUser.initiate())
 store.dispatch(apiSlice.endpoints.getPosts.initiate())

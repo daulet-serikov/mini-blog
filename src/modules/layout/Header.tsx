@@ -1,52 +1,76 @@
 import {Col, Row, Button, Space, Dropdown, MenuProps} from 'antd'
-import {Link} from 'react-router-dom'
+import {UserOutlined, LogoutOutlined} from '@ant-design/icons'
+import {Link, useNavigate} from 'react-router-dom'
 import {modalToggled} from '../store/modalsSlice'
 import {useAppDispatch} from '../store/hooks'
 import {useGetUserQuery} from '../store/apiSlice'
-import {UserOutlined, LogoutOutlined} from '@ant-design/icons'
+import {useLogoutMutation} from '../logout/logoutSlice'
 
 export function Header() {
   const dispatch = useAppDispatch()
-  const {data: currentUser} = useGetUserQuery()
+  const navigate = useNavigate()
+
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isSuccess: isUserSuccess
+  } = useGetUserQuery()
+  const [logout, {isLoading: isLogoutLoading}] = useLogoutMutation()
 
   let buttons = (
-    <>
-      <Button type='primary' onClick={() => dispatch(modalToggled('login'))}>Log in</Button>
-      <Button onClick={() => dispatch(modalToggled('register'))}>Register</Button>
-    </>
+    <Button type='primary' loading>Loading</Button>
   )
 
   const items: MenuProps['items'] = [
     {
       label: 'My profile',
       key: '1',
-      icon: <UserOutlined />
+      icon: <UserOutlined />,
+      onClick: () => {
+        navigate(`/${user}`)
+      }
     },
     {
       label: 'Log out',
       key: '2',
       danger: true,
-      icon: <LogoutOutlined />
+      icon: <LogoutOutlined />,
+      onClick: () => {
+        if (!isLogoutLoading) {
+          logout()
+          navigate('/')
+        }
+      }
     }
   ]
 
-  const menuProps = {
-    items,
-    onClick: () => {console.log(1)}
-  }
-
-  if (currentUser) {
-    /* TODO: place closing angle braces at the new line*/
-    buttons = (
-      <Dropdown.Button
-        onClick={() => dispatch(modalToggled('addPost'))}
-        type='primary'
-        trigger={['click']}
-        menu={menuProps}
-      >
-        Create post
-      </Dropdown.Button>
-    )
+  if (!isUserLoading && isUserSuccess) {
+    if (user) {
+      buttons = (
+        <Dropdown.Button
+          onClick={() => dispatch(modalToggled('addPost'))}
+          type='primary'
+          trigger={['click']}
+          menu={{items}}
+        >
+          Create post
+        </Dropdown.Button>
+      )
+    } else {
+      buttons = (
+        <>
+          <Button
+            type='primary'
+            onClick={() => dispatch(modalToggled('login'))}
+          >
+            Log in
+          </Button>
+          <Button onClick={() => dispatch(modalToggled('register'))}>
+            Register
+          </Button>
+        </>
+      )
+    }
   }
 
   return (
