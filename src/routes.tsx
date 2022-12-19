@@ -1,4 +1,4 @@
-import {Layout} from './modules/layout/Layout'
+import {Layout} from './layout/Layout'
 import {Posts} from './modules/posts/Posts'
 import {Profile} from './modules/profile/Profile'
 import {RouteObject} from 'react-router-dom'

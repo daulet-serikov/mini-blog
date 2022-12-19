@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import {
   Space,
   Skeleton,
@@ -15,11 +16,12 @@ import {
   useGetUserQuery,
   selectUserById,
   selectPostIdsByUser
-} from '../store/apiSlice'
-import {useAppSelector} from '../store/hooks'
+} from '../../store/apiSlice'
+import {useAppSelector} from '../../store/hooks'
 import {Post} from '../post/Post'
 import styles from './Profile.module.css'
 import {useLogoutMutation} from '../logout/logoutSlice'
+
 
 export function Profile() {
   const {userId} = useParams()
@@ -32,6 +34,14 @@ export function Profile() {
   const {isSuccess: isUsersSuccess, isLoading: isUsersLoading} = useGetUsersQuery()
   const {data: currentUser, isSuccess: isUserSuccess, isLoading: isUserLoading} = useGetUserQuery()
   const [logout, {isLoading: isLogoutLoading}] = useLogoutMutation()
+
+  useEffect(() => {
+    if (user) {
+      document.title = `${user.firstName} ${user.lastName} - Mini Blog`
+    } else {
+      document.title = 'Mini Blog'
+    }
+  }, [user])
 
   const isDataLoaded = !isPostsLoading && !isUsersLoading && !isUserLoading
     && isPostsSuccess && isUsersSuccess && isUserSuccess
@@ -58,6 +68,7 @@ export function Profile() {
     } else {
       const isCurrentUserProfile = currentUser === user.username
       const postsTitle = isCurrentUserProfile ? 'My posts' : `${user.firstName}'s posts`
+
       const extra = isCurrentUserProfile ? (
         <Button
           danger

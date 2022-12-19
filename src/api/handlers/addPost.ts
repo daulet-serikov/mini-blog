@@ -4,7 +4,7 @@ import {configuration} from '../configuration'
 import * as database from '../database'
 import {PostWithoutId} from '../types/PostWithoutId'
 import {ApiResponse} from '../types/ApiResponse'
-import {AddPostFormValue} from '../../add-post/AddPostFormValue'
+import {AddPostFormValue} from '../../modules/add-post/AddPostFormValue'
 
 export const addPost = rest.post(
   `${configuration.apiPrefix}/addPost`,

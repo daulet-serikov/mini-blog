@@ -1,5 +1,5 @@
-import {ApiResponse} from '../api/types/ApiResponse'
-import {ClientUser} from '../api/types/ClientUser'
+import {ApiResponse} from '../../api/types/ApiResponse'
+import {ClientUser} from '../../api/types/ClientUser'
 
 interface SuccessRegisterApiResponse extends ApiResponse {
   status: 'success'

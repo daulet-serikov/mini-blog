@@ -4,7 +4,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {modalToggled} from '../store/modalsSlice'
 import {useAppDispatch} from '../store/hooks'
 import {useGetUserQuery} from '../store/apiSlice'
-import {useLogoutMutation} from '../logout/logoutSlice'
+import {useLogoutMutation} from '../modules/logout/logoutSlice'
 
 export function Header() {
   const dispatch = useAppDispatch()
@@ -15,6 +15,7 @@ export function Header() {
     isLoading: isUserLoading,
     isSuccess: isUserSuccess
   } = useGetUserQuery()
+
   const [logout, {isLoading: isLogoutLoading}] = useLogoutMutation()
 
   let buttons = (

@@ -1,4 +1,4 @@
-import {apiSlice, postsAdapter} from '../store/apiSlice'
+import {apiSlice, postsAdapter} from '../../store/apiSlice'
 import {AddPostApiResponse, isSuccessAddPostApiResponse} from './AddPostApiResponse'
 import {AddPostFormValue} from './AddPostFormValue'
 

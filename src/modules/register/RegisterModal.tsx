@@ -1,7 +1,7 @@
 import {Button, Input, Modal, Form, Alert} from 'antd'
 import {useState} from 'react'
-import {useAppSelector, useAppDispatch} from '../store/hooks'
-import {modalToggled} from '../store/modalsSlice'
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {modalToggled} from '../../store/modalsSlice'
 import {isSuccessRegisterApiResponse} from './RegisterApiResponse'
 import {RegisterFormValue} from './RegisterFormValue'
 import {useRegisterMutation} from './registerSlice'
@@ -17,7 +17,6 @@ export function RegisterModal() {
   const dispatch = useAppDispatch()
 
   const [register, {isLoading: isRegisterLoading}] = useRegisterMutation()
-
 
   const onSubmit = async (values: RegisterFormValue) => {
     const response = await register(values).unwrap()

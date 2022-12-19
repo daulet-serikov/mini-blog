@@ -1,6 +1,7 @@
+import {useEffect} from 'react'
 import {Space, Skeleton} from 'antd'
-import {selectPostIds, useGetPostsQuery, useGetUsersQuery} from '../store/apiSlice'
-import {useAppSelector} from '../store/hooks'
+import {selectPostIds, useGetPostsQuery, useGetUsersQuery} from '../../store/apiSlice'
+import {useAppSelector} from '../../store/hooks'
 import {Post} from '../post/Post'
 
 export function Posts() {
@@ -15,6 +16,10 @@ export function Posts() {
   } = useGetUsersQuery()
 
   const postIds = useAppSelector(selectPostIds)
+
+  useEffect(() => {
+    document.title = 'Mini Blog'
+  })
 
   const isDataLoaded = !isPostsLoading && !isUsersLoading && isPostsSuccess && isUsersSuccess
 

@@ -1,5 +1,5 @@
-import {ApiResponse} from '../api/types/ApiResponse'
-import {Post} from '../api/types/Post'
+import {ApiResponse} from '../../api/types/ApiResponse'
+import {Post} from '../../api/types/Post'
 
 interface SuccessAddPostApiResponse extends ApiResponse {
   status: 'success'

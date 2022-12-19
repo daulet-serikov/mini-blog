@@ -1,8 +1,8 @@
 import {Link} from 'react-router-dom'
 import {Card, Typography} from 'antd'
 import {EntityId} from '@reduxjs/toolkit'
-import {selectPostById, selectUserById, useGetUserQuery} from '../store/apiSlice'
-import {useAppSelector} from '../store/hooks'
+import {selectPostById, selectUserById, useGetUserQuery} from '../../store/apiSlice'
+import {useAppSelector} from '../../store/hooks'
 
 const {Paragraph} = Typography
 

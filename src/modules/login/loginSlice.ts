@@ -1,4 +1,4 @@
-import {apiSlice} from '../store/apiSlice'
+import {apiSlice} from '../../store/apiSlice'
 import {isSuccessLoginApiResponse, LoginApiResponse} from './LoginApiResponse'
 import {LoginFormValue} from './LoginFormValue'
 

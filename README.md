@@ -1,8 +1,15 @@
-# TODOs
-- update readme
-- dynamic titles
-- rename some files/directories
-- is layout module?
+# About
+Mini Blog is a react application created to demonstrate [Daulet](https://www.linkedin.com/in/daulet-serikov/)'s skills.
+Please open the [link](https://not-implemeted) to see how it works.
+
+## Tools used
+- React
+- Redux toolkit query
+- Typescript
+- Ant design
+- Mock Service Worker
+- React Router
+- Yup
 
 # Getting Started with Create React App
 

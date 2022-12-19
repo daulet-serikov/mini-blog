@@ -2,7 +2,7 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {LoginFormValue} from '../../login/LoginFormValue'
+import {LoginFormValue} from '../../modules/login/LoginFormValue'
 import {ApiResponse} from '../types/ApiResponse'
 
 export const login = rest.post(

@@ -1,5 +1,5 @@
-import {apiSlice} from '../store/apiSlice'
-import {ApiResponse} from '../api/types/ApiResponse'
+import {apiSlice} from '../../store/apiSlice'
+import {ApiResponse} from '../../api/types/ApiResponse'
 
 export const logoutApiSlice = apiSlice.injectEndpoints({
   endpoints(builder) {

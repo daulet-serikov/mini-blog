@@ -2,7 +2,7 @@ import {rest} from 'msw'
 import * as Yup from 'yup'
 import {configuration} from '../configuration'
 import * as database from '../database'
-import {RegisterFormValue} from '../../register/RegisterFormValue'
+import {RegisterFormValue} from '../../modules/register/RegisterFormValue'
 import {ApiResponse} from '../types/ApiResponse'
 
 export const register = rest.post(

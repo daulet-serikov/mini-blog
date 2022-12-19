@@ -1,4 +1,4 @@
-import {ApiResponse} from '../api/types/ApiResponse'
+import {ApiResponse} from '../../api/types/ApiResponse'
 
 interface SuccessUserApiResponse extends ApiResponse {
   data: string

@@ -1,4 +1,4 @@
-import {apiSlice, usersAdapter} from '../store/apiSlice'
+import {apiSlice, usersAdapter} from '../../store/apiSlice'
 import {isSuccessRegisterApiResponse, RegisterApiResponse} from './RegisterApiResponse'
 import {RegisterFormValue} from './RegisterFormValue'
 
