@@ -1,6 +1,6 @@
 # About
 Mini Blog is a react application created to demonstrate [Daulet](https://www.linkedin.com/in/daulet-serikov/)'s skills.
-Please open the [link](https://not-implemeted) to see how it works.
+Please open the [link](https://dauletserikov.github.io/mini-blog/) to see how it works.
 
 ## Tools used
 - React

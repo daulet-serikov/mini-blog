@@ -12,7 +12,15 @@ import {LoginModal} from './modules/login/LoginModal'
 import {RegisterModal} from './modules/register/RegisterModal'
 import {AddPostModal} from './modules/add-post/AddPostModal'
 
-worker.start()
+if (window.location.pathname === '/mini-blog') {
+  window.location.pathname = '/mini-blog/'
+}
+
+worker.start({
+  serviceWorker: {
+    url: '/mini-blog/mockServiceWorker.js'
+  }
+})
 
 const container = document.getElementById('root')!
 const root = createRoot(container)
