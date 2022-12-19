@@ -25,6 +25,7 @@ export function AddPostModal() {
       dispatch(modalToggled('addPost'))
       form.resetFields()
       setShowError(false)
+      setErrorText('')
     } else {
       setErrorText(response.data)
       setShowError(true)

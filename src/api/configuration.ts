@@ -1,4 +1,4 @@
 export const configuration = {
-    delay: 2000,
+    delay: 50,
     apiPrefix: '/api'
 }

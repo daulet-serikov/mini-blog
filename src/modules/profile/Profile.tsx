@@ -3,13 +3,12 @@ import {
   Space,
   Skeleton,
   Typography,
-  Empty,
   Descriptions,
   Card,
   Button
 } from 'antd'
 import {LogoutOutlined} from '@ant-design/icons'
-import {useParams, Link, useNavigate} from 'react-router-dom'
+import {useParams, useNavigate} from 'react-router-dom'
 import {
   useGetUsersQuery,
   useGetPostsQuery,
@@ -19,8 +18,8 @@ import {
 } from '../../store/apiSlice'
 import {useAppSelector} from '../../store/hooks'
 import {Post} from '../post/Post'
-import styles from './Profile.module.css'
 import {useLogoutMutation} from '../logout/logoutSlice'
+import {Error} from '../error/Error'
 
 
 export function Profile() {
@@ -30,9 +29,22 @@ export function Profile() {
   const postIds = useAppSelector(state => selectPostIdsByUser(state, userId!))
   const user = useAppSelector(state => selectUserById(state, userId!))
 
-  const {isSuccess: isPostsSuccess, isLoading: isPostsLoading} = useGetPostsQuery()
-  const {isSuccess: isUsersSuccess, isLoading: isUsersLoading} = useGetUsersQuery()
-  const {data: currentUser, isSuccess: isUserSuccess, isLoading: isUserLoading} = useGetUserQuery()
+  const {
+    isSuccess: isPostsSuccess,
+    isLoading: isPostsLoading
+  } = useGetPostsQuery()
+
+  const {
+    isSuccess: isUsersSuccess,
+    isLoading: isUsersLoading
+  } = useGetUsersQuery()
+
+  const {
+    data: currentUser,
+    isSuccess: isUserSuccess,
+    isLoading: isUserLoading
+  } = useGetUserQuery()
+
   const [logout, {isLoading: isLogoutLoading}] = useLogoutMutation()
 
   useEffect(() => {
@@ -58,13 +70,7 @@ export function Profile() {
 
   if (isDataLoaded) {
     if (!user) {
-      content = (
-        <Empty className={styles.empty} description={
-          <Typography.Paragraph>
-            The user was not found.<br /><Link to='/'>Go home</Link>
-          </Typography.Paragraph>
-        } />
-      )
+      content = <Error text='The user was not found' />
     } else {
       const isCurrentUserProfile = currentUser === user.username
       const postsTitle = isCurrentUserProfile ? 'My posts' : `${user.firstName}'s posts`

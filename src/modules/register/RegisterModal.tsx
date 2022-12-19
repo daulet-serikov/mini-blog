@@ -44,7 +44,12 @@ export function RegisterModal() {
       onCancel={() => dispatch(modalToggled('register'))}
       title='Register'
       footer={[
-        <Button key='submit' type='primary' onClick={form.submit} loading={isRegisterLoading}>
+        <Button
+          key='submit'
+          type='primary'
+          onClick={form.submit}
+          loading={isRegisterLoading}
+        >
           Submit
         </Button>
       ]}

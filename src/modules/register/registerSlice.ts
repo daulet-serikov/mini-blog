@@ -18,11 +18,13 @@ export const registerApiSlice = apiSlice.injectEndpoints({
 
           if (isSuccessRegisterApiResponse(response)) {
             const user = response.data
+
             dispatch(
               apiSlice.util.updateQueryData('getUsers', undefined, draft => {
                 usersAdapter.addOne(draft, user)
               })
             )
+
             dispatch(apiSlice.util.updateQueryData('getUser', undefined, () => user.username))
           }
         }

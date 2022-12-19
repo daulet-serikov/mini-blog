@@ -70,7 +70,7 @@ export function LoginModal() {
           ]}
           normalize={value => value.trim()}
         >
-          <Input prefix={<UserOutlined className='site-form-item-icon' />} placeholder='Name' />
+          <Input prefix={<UserOutlined />} placeholder='Name' />
         </Form.Item>
         <Form.Item
           name='password'

@@ -8,7 +8,10 @@ export const logout = rest.post(
     if (!sessionStorage.getItem('username')) {
       return response(
         context.delay(configuration.delay),
-        context.json<ApiResponse>({status: 'error', data: 'You have already been logged out'})
+        context.json<ApiResponse>({
+          status: 'error',
+          data: 'You have already been logged out'
+        })
       )
     }
 

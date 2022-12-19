@@ -1,5 +1,5 @@
 import React from 'react'
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import {createHashRouter, RouterProvider} from 'react-router-dom'
 import {createRoot} from 'react-dom/client'
 import {Provider} from 'react-redux'
 import reportWebVitals from './reportWebVitals'
@@ -17,7 +17,7 @@ worker.start()
 const container = document.getElementById('root')!
 const root = createRoot(container)
 
-const router = createBrowserRouter(routes)
+const router = createHashRouter(routes)
 
 store.dispatch(apiSlice.endpoints.getUser.initiate())
 store.dispatch(apiSlice.endpoints.getPosts.initiate())

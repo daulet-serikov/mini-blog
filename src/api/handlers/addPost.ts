@@ -12,7 +12,10 @@ export const addPost = rest.post(
     if (!sessionStorage.getItem('username')) {
       return response(
         context.delay(configuration.delay),
-        context.json<ApiResponse>({status: 'error', data: 'You are not authorized to add posts'})
+        context.json<ApiResponse>({
+          status: 'error',
+          data: 'You are not authorized to add posts'
+        })
       )
     }
 
